@@ -1,0 +1,37 @@
+{
+  "metadata": {
+    "description": "Sample rules for import - Land Transfer module",
+    "module": "transfer",
+    "version": "1.0",
+    "author": "Legal Expert System"
+  },
+  "rules": [
+    {
+      "name": "R7_Transfer_VeryHigh",
+      "conditions": [
+        {"variable": "legal_status", "term": "complete"},
+        {"variable": "area", "term": "large"},
+        {"variable": "location", "term": "urban"},
+        {"variable": "financial_obligation", "term": "fulfilled"}
+      ],
+      "conclusion": "high_feasibility",
+      "weight": 1.0,
+      "legal_article_code": "LUAT_DD_2024",
+      "legal_article_number": "Điều 45",
+      "description": "Đầy đủ pháp lý, diện tích lớn, đô thị, đã nộp thuế → Rất khả thi"
+    },
+    {
+      "name": "R8_Transfer_MediumRisk",
+      "conditions": [
+        {"variable": "legal_status", "term": "partial"},
+        {"variable": "land_value", "term": "high"},
+        {"variable": "location", "term": "suburban"}
+      ],
+      "conclusion": "medium_feasibility",
+      "weight": 0.75,
+      "legal_article_code": "LUAT_DD_2024",
+      "legal_article_number": "Điều 153",
+      "description": "Pháp lý chưa hoàn chỉnh, giá cao, ven đô → Cần thẩm định kỹ"
+    }
+  ]
+}

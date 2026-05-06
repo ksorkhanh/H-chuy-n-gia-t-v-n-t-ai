@@ -1,0 +1,87 @@
+{
+  "module": "compensation",
+  "display_name": "Bồi thường khi Nhà nước thu hồi đất",
+  "description": "Đánh giá mức bồi thường khi Nhà nước thu hồi đất dựa trên loại đất, thời gian sử dụng, diện tích và các yếu tố liên quan",
+  "icon": "💰",
+  "domain": "dat_dai",
+  "input_variables": [
+    {
+      "name": "land_type",
+      "label": "Loại đất",
+      "range": [0, 10],
+      "unit": "điểm",
+      "description": "Phân loại đất (0=đất chưa SD, 5=nông nghiệp, 10=đất ở đô thị)",
+      "membership_functions": [
+        {"name": "unused", "label": "Chưa sử dụng", "type": "trapezoidal", "params": [0, 0, 1, 3]},
+        {"name": "agricultural", "label": "Nông nghiệp", "type": "triangular", "params": [2, 4, 6]},
+        {"name": "residential", "label": "Đất ở", "type": "trapezoidal", "params": [5, 7, 10, 10]}
+      ]
+    },
+    {
+      "name": "usage_duration",
+      "label": "Thời gian sử dụng",
+      "range": [0, 10],
+      "unit": "điểm",
+      "description": "Thời gian sử dụng đất ổn định (0=mới, 10=rất lâu)",
+      "membership_functions": [
+        {"name": "short", "label": "Ngắn (<5 năm)", "type": "trapezoidal", "params": [0, 0, 2, 4]},
+        {"name": "medium", "label": "Trung bình (5-15 năm)", "type": "triangular", "params": [3, 5, 7]},
+        {"name": "long", "label": "Dài (>15 năm)", "type": "trapezoidal", "params": [6, 8, 10, 10]}
+      ]
+    },
+    {
+      "name": "area",
+      "label": "Diện tích thu hồi",
+      "range": [0, 10],
+      "unit": "điểm",
+      "description": "Quy mô diện tích bị thu hồi (0=rất nhỏ, 10=rất lớn)",
+      "membership_functions": [
+        {"name": "small", "label": "Nhỏ", "type": "trapezoidal", "params": [0, 0, 2, 4]},
+        {"name": "medium", "label": "Trung bình", "type": "triangular", "params": [3, 5, 7]},
+        {"name": "large", "label": "Lớn", "type": "trapezoidal", "params": [6, 8, 10, 10]}
+      ]
+    },
+    {
+      "name": "k_coefficient",
+      "label": "Hệ số điều chỉnh K",
+      "range": [0, 10],
+      "unit": "điểm",
+      "description": "Hệ số điều chỉnh giá đất theo vị trí, hạ tầng (0=thấp, 10=cao)",
+      "membership_functions": [
+        {"name": "low", "label": "Thấp", "type": "trapezoidal", "params": [0, 0, 2, 4]},
+        {"name": "medium", "label": "Trung bình", "type": "triangular", "params": [3, 5, 7]},
+        {"name": "high", "label": "Cao", "type": "trapezoidal", "params": [6, 8, 10, 10]}
+      ]
+    },
+    {
+      "name": "resettlement",
+      "label": "Nhu cầu tái định cư",
+      "range": [0, 10],
+      "unit": "điểm",
+      "description": "Mức độ cần hỗ trợ tái định cư (0=không cần, 10=rất cần)",
+      "membership_functions": [
+        {"name": "not_needed", "label": "Không cần", "type": "trapezoidal", "params": [0, 0, 2, 4]},
+        {"name": "partial", "label": "Một phần", "type": "triangular", "params": [3, 5, 7]},
+        {"name": "needed", "label": "Cần thiết", "type": "trapezoidal", "params": [6, 8, 10, 10]}
+      ]
+    }
+  ],
+  "output_variable": {
+    "name": "compensation_level",
+    "label": "Mức bồi thường",
+    "range": [0, 100],
+    "unit": "điểm",
+    "membership_functions": [
+      {"name": "low_compensation", "label": "Bồi thường thấp", "type": "trapezoidal", "params": [0, 0, 20, 40]},
+      {"name": "medium_compensation", "label": "Bồi thường trung bình", "type": "triangular", "params": [30, 50, 70]},
+      {"name": "high_compensation", "label": "Bồi thường cao", "type": "trapezoidal", "params": [60, 80, 100, 100]}
+    ]
+  },
+  "input_fields": [
+    {"name": "land_type", "label": "Loại đất", "type": "slider", "min": 0, "max": 10, "step": 0.5, "default": 5, "description": "0=Chưa sử dụng, 5=Nông nghiệp, 10=Đất ở đô thị"},
+    {"name": "usage_duration", "label": "Thời gian sử dụng", "type": "slider", "min": 0, "max": 10, "step": 0.5, "default": 5, "description": "0=Mới sử dụng, 10=Trên 20 năm"},
+    {"name": "area", "label": "Diện tích thu hồi", "type": "slider", "min": 0, "max": 10, "step": 0.5, "default": 5, "description": "0=Rất nhỏ, 10=Rất lớn"},
+    {"name": "k_coefficient", "label": "Hệ số điều chỉnh K", "type": "slider", "min": 0, "max": 10, "step": 0.5, "default": 5, "description": "Hệ số K theo vị trí và hạ tầng"},
+    {"name": "resettlement", "label": "Nhu cầu tái định cư", "type": "slider", "min": 0, "max": 10, "step": 0.5, "default": 5, "description": "0=Không cần, 10=Rất cần thiết"}
+  ]
+}

@@ -1,0 +1,87 @@
+{
+  "module": "violation",
+  "display_name": "Vi phạm hành chính đất đai",
+  "description": "Đánh giá mức xử phạt vi phạm hành chính trong lĩnh vực đất đai dựa trên mức độ vi phạm, diện tích, tái phạm và thiệt hại",
+  "icon": "⚖️",
+  "domain": "dat_dai",
+  "input_variables": [
+    {
+      "name": "severity",
+      "label": "Mức độ vi phạm",
+      "range": [0, 10],
+      "unit": "điểm",
+      "description": "Mức độ nghiêm trọng của hành vi vi phạm (0=nhẹ, 10=rất nghiêm trọng)",
+      "membership_functions": [
+        {"name": "minor", "label": "Nhẹ", "type": "trapezoidal", "params": [0, 0, 2, 4]},
+        {"name": "moderate", "label": "Trung bình", "type": "triangular", "params": [3, 5, 7]},
+        {"name": "serious", "label": "Nghiêm trọng", "type": "trapezoidal", "params": [6, 8, 10, 10]}
+      ]
+    },
+    {
+      "name": "violation_area",
+      "label": "Diện tích vi phạm",
+      "range": [0, 10],
+      "unit": "điểm",
+      "description": "Quy mô diện tích đất vi phạm (0=rất nhỏ, 10=rất lớn)",
+      "membership_functions": [
+        {"name": "small", "label": "Nhỏ", "type": "trapezoidal", "params": [0, 0, 2, 4]},
+        {"name": "medium", "label": "Trung bình", "type": "triangular", "params": [3, 5, 7]},
+        {"name": "large", "label": "Lớn", "type": "trapezoidal", "params": [6, 8, 10, 10]}
+      ]
+    },
+    {
+      "name": "duration",
+      "label": "Thời gian vi phạm",
+      "range": [0, 10],
+      "unit": "điểm",
+      "description": "Thời gian thực hiện hành vi vi phạm (0=mới, 10=kéo dài)",
+      "membership_functions": [
+        {"name": "short", "label": "Ngắn", "type": "trapezoidal", "params": [0, 0, 2, 4]},
+        {"name": "medium", "label": "Trung bình", "type": "triangular", "params": [3, 5, 7]},
+        {"name": "long", "label": "Kéo dài", "type": "trapezoidal", "params": [6, 8, 10, 10]}
+      ]
+    },
+    {
+      "name": "recidivism",
+      "label": "Tái phạm",
+      "range": [0, 10],
+      "unit": "điểm",
+      "description": "Tình trạng tái phạm (0=lần đầu, 10=tái phạm nhiều lần)",
+      "membership_functions": [
+        {"name": "no", "label": "Lần đầu", "type": "trapezoidal", "params": [0, 0, 2, 4]},
+        {"name": "once", "label": "Tái phạm 1 lần", "type": "triangular", "params": [3, 5, 7]},
+        {"name": "yes", "label": "Tái phạm nhiều", "type": "trapezoidal", "params": [6, 8, 10, 10]}
+      ]
+    },
+    {
+      "name": "damage",
+      "label": "Mức độ thiệt hại",
+      "range": [0, 10],
+      "unit": "điểm",
+      "description": "Thiệt hại gây ra cho môi trường, tài nguyên (0=không, 10=rất lớn)",
+      "membership_functions": [
+        {"name": "low", "label": "Thấp", "type": "trapezoidal", "params": [0, 0, 2, 4]},
+        {"name": "medium", "label": "Trung bình", "type": "triangular", "params": [3, 5, 7]},
+        {"name": "high", "label": "Cao", "type": "trapezoidal", "params": [6, 8, 10, 10]}
+      ]
+    }
+  ],
+  "output_variable": {
+    "name": "penalty_level",
+    "label": "Mức xử phạt",
+    "range": [0, 100],
+    "unit": "điểm",
+    "membership_functions": [
+      {"name": "light_penalty", "label": "Phạt nhẹ / Cảnh cáo", "type": "trapezoidal", "params": [0, 0, 20, 40]},
+      {"name": "medium_penalty", "label": "Phạt trung bình", "type": "triangular", "params": [30, 50, 70]},
+      {"name": "heavy_penalty", "label": "Phạt nặng", "type": "trapezoidal", "params": [60, 80, 100, 100]}
+    ]
+  },
+  "input_fields": [
+    {"name": "severity", "label": "Mức độ vi phạm", "type": "slider", "min": 0, "max": 10, "step": 0.5, "default": 5, "description": "0=Vi phạm nhẹ, 10=Vi phạm rất nghiêm trọng"},
+    {"name": "violation_area", "label": "Diện tích vi phạm", "type": "slider", "min": 0, "max": 10, "step": 0.5, "default": 5, "description": "0=Rất nhỏ, 10=Rất lớn"},
+    {"name": "duration", "label": "Thời gian vi phạm", "type": "slider", "min": 0, "max": 10, "step": 0.5, "default": 5, "description": "0=Mới xảy ra, 10=Kéo dài nhiều năm"},
+    {"name": "recidivism", "label": "Tình trạng tái phạm", "type": "slider", "min": 0, "max": 10, "step": 0.5, "default": 0, "description": "0=Lần đầu vi phạm, 10=Tái phạm nhiều lần"},
+    {"name": "damage", "label": "Mức độ thiệt hại", "type": "slider", "min": 0, "max": 10, "step": 0.5, "default": 5, "description": "0=Không thiệt hại, 10=Thiệt hại rất lớn"}
+  ]
+}

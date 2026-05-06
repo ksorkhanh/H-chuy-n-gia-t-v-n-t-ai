@@ -1,0 +1,87 @@
+{
+  "module": "transfer",
+  "display_name": "Chuyển nhượng quyền sử dụng đất",
+  "description": "Đánh giá tính khả thi của việc chuyển nhượng quyền sử dụng đất dựa trên các yếu tố pháp lý, kinh tế và vị trí",
+  "icon": "🔄",
+  "domain": "dat_dai",
+  "input_variables": [
+    {
+      "name": "legal_status",
+      "label": "Tình trạng pháp lý",
+      "range": [0, 10],
+      "unit": "điểm",
+      "description": "Mức độ đầy đủ giấy tờ pháp lý (0=không có, 10=đầy đủ)",
+      "membership_functions": [
+        {"name": "incomplete", "label": "Không đầy đủ", "type": "trapezoidal", "params": [0, 0, 2, 4]},
+        {"name": "partial", "label": "Một phần", "type": "triangular", "params": [2, 5, 8]},
+        {"name": "complete", "label": "Đầy đủ", "type": "trapezoidal", "params": [6, 8, 10, 10]}
+      ]
+    },
+    {
+      "name": "land_value",
+      "label": "Giá trị đất",
+      "range": [0, 10],
+      "unit": "điểm",
+      "description": "Mức giá chuyển nhượng so với thị trường (0=rất thấp, 10=rất cao)",
+      "membership_functions": [
+        {"name": "low", "label": "Thấp", "type": "trapezoidal", "params": [0, 0, 2, 4]},
+        {"name": "reasonable", "label": "Hợp lý", "type": "triangular", "params": [3, 5, 7]},
+        {"name": "high", "label": "Cao", "type": "trapezoidal", "params": [6, 8, 10, 10]}
+      ]
+    },
+    {
+      "name": "area",
+      "label": "Diện tích",
+      "range": [0, 10],
+      "unit": "điểm",
+      "description": "Quy mô diện tích đất (0=rất nhỏ, 10=rất lớn)",
+      "membership_functions": [
+        {"name": "small", "label": "Nhỏ", "type": "trapezoidal", "params": [0, 0, 2, 4]},
+        {"name": "medium", "label": "Trung bình", "type": "triangular", "params": [3, 5, 7]},
+        {"name": "large", "label": "Lớn", "type": "trapezoidal", "params": [6, 8, 10, 10]}
+      ]
+    },
+    {
+      "name": "location",
+      "label": "Vị trí",
+      "range": [0, 10],
+      "unit": "điểm",
+      "description": "Vị trí đất (0=nông thôn xa, 10=trung tâm đô thị)",
+      "membership_functions": [
+        {"name": "rural", "label": "Nông thôn", "type": "trapezoidal", "params": [0, 0, 2, 4]},
+        {"name": "suburban", "label": "Ven đô", "type": "triangular", "params": [3, 5, 7]},
+        {"name": "urban", "label": "Đô thị", "type": "trapezoidal", "params": [6, 8, 10, 10]}
+      ]
+    },
+    {
+      "name": "financial_obligation",
+      "label": "Nghĩa vụ tài chính",
+      "range": [0, 10],
+      "unit": "điểm",
+      "description": "Mức hoàn thành nghĩa vụ tài chính (0=chưa thực hiện, 10=hoàn thành)",
+      "membership_functions": [
+        {"name": "unfulfilled", "label": "Chưa thực hiện", "type": "trapezoidal", "params": [0, 0, 2, 4]},
+        {"name": "partial", "label": "Một phần", "type": "triangular", "params": [3, 5, 7]},
+        {"name": "fulfilled", "label": "Hoàn thành", "type": "trapezoidal", "params": [6, 8, 10, 10]}
+      ]
+    }
+  ],
+  "output_variable": {
+    "name": "feasibility",
+    "label": "Mức độ khả thi",
+    "range": [0, 100],
+    "unit": "điểm",
+    "membership_functions": [
+      {"name": "low_feasibility", "label": "Khả thi thấp", "type": "trapezoidal", "params": [0, 0, 20, 40]},
+      {"name": "medium_feasibility", "label": "Khả thi trung bình", "type": "triangular", "params": [30, 50, 70]},
+      {"name": "high_feasibility", "label": "Khả thi cao", "type": "trapezoidal", "params": [60, 80, 100, 100]}
+    ]
+  },
+  "input_fields": [
+    {"name": "legal_status", "label": "Tình trạng pháp lý", "type": "slider", "min": 0, "max": 10, "step": 0.5, "default": 5, "description": "Đánh giá mức độ đầy đủ giấy tờ pháp lý của thửa đất"},
+    {"name": "land_value", "label": "Giá trị đất (so với thị trường)", "type": "slider", "min": 0, "max": 10, "step": 0.5, "default": 5, "description": "So sánh giá chuyển nhượng với giá thị trường khu vực"},
+    {"name": "area", "label": "Quy mô diện tích", "type": "slider", "min": 0, "max": 10, "step": 0.5, "default": 5, "description": "Đánh giá quy mô diện tích thửa đất"},
+    {"name": "location", "label": "Vị trí đất", "type": "slider", "min": 0, "max": 10, "step": 0.5, "default": 5, "description": "Đánh giá vị trí thửa đất"},
+    {"name": "financial_obligation", "label": "Nghĩa vụ tài chính", "type": "slider", "min": 0, "max": 10, "step": 0.5, "default": 5, "description": "Mức hoàn thành thuế, phí, lệ phí"}
+  ]
+}

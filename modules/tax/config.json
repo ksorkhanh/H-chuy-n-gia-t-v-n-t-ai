@@ -1,0 +1,59 @@
+{
+  "module": "tax",
+  "display_name": "Thuế đất đai",
+  "icon": "💲",
+  "description": "Tư vấn và ước tính thuế suất/phí sử dụng đất.",
+  "input_variables": [
+    {
+      "name": "land_value",
+      "label": "Giá trị đất (theo khung giá)",
+      "range": [0, 10],
+      "membership_functions": [
+        {"name": "low", "type": "triangular", "params": [0, 0, 5]},
+        {"name": "medium", "type": "triangular", "params": [2, 5, 8]},
+        {"name": "high", "type": "triangular", "params": [5, 10, 10]}
+      ]
+    },
+    {
+      "name": "usage_purpose",
+      "label": "Mục đích sử dụng",
+      "range": [0, 10],
+      "membership_functions": [
+        {"name": "residential", "type": "triangular", "params": [0, 0, 5]},
+        {"name": "commercial", "type": "triangular", "params": [5, 10, 10]}
+      ]
+    }
+  ],
+  "output_variable": {
+    "name": "tax_rate",
+    "label": "Thuế suất dự kiến",
+    "range": [0, 100],
+    "membership_functions": [
+      {"name": "preferential", "type": "triangular", "params": [0, 0, 40]},
+      {"name": "standard", "type": "triangular", "params": [30, 50, 70]},
+      {"name": "high_tax", "type": "triangular", "params": [60, 100, 100]}
+    ]
+  },
+  "input_fields": [
+    {
+      "name": "land_value",
+      "label": "Giá trị đất",
+      "description": "Giá trị đất theo bảng giá đất của UBND tỉnh (0: thấp - 10: rất cao)",
+      "type": "slider",
+      "min": 0,
+      "max": 10,
+      "step": 0.5,
+      "default": 5
+    },
+    {
+      "name": "usage_purpose",
+      "label": "Mục đích sử dụng",
+      "description": "Mục đích sử dụng đất (0: nông nghiệp/để ở - 10: sản xuất kinh doanh)",
+      "type": "slider",
+      "min": 0,
+      "max": 10,
+      "step": 0.5,
+      "default": 2
+    }
+  ]
+}
