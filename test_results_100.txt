@@ -1,0 +1,621 @@
+================================================================================
+BÁO CÁO KIỂM THỬ HỆ THỐNG CHUYÊN GIA (100 TRƯỜNG HỢP)
+Thời gian: 2026-05-13 15:50:22
+================================================================================
+
+
+>>> MODULE: BỒI THƯỜNG KHI NHÀ NƯỚC THU HỒI ĐẤT (compensation)
+--------------------------------------------------
+CASE 001:
+  Inputs: {"land_type": 2.0, "usage_duration": 0.5, "area": 8.5, "k_coefficient": 5.0, "resettlement": 10.0}
+  Score:  17.9 / 100
+  Result: 📉 BỒI THƯỜNG MỨC THẤP
+  Rules:  1 rules fired
+------------------------------
+CASE 002:
+  Inputs: {"land_type": 1.5, "usage_duration": 8.0, "area": 2.0, "k_coefficient": 6.5, "resettlement": 8.0}
+  Score:  18.2 / 100
+  Result: 📉 BỒI THƯỜNG MỨC THẤP
+  Rules:  1 rules fired
+------------------------------
+CASE 003:
+  Inputs: {"land_type": 9.0, "usage_duration": 2.0, "area": 10.0, "k_coefficient": 9.0, "resettlement": 8.5}
+  Score:  84.0 / 100
+  Result: 💰 BỒI THƯỜNG MỨC CAO
+  Rules:  1 rules fired
+------------------------------
+CASE 004:
+  Inputs: {"land_type": 3.0, "usage_duration": 5.0, "area": 7.0, "k_coefficient": 4.5, "resettlement": 2.0}
+  Score:  50.0 / 100
+  Result: 📊 BỒI THƯỜNG MỨC TRUNG BÌNH
+  Rules:  0 rules fired
+------------------------------
+CASE 005:
+  Inputs: {"land_type": 4.0, "usage_duration": 6.0, "area": 9.5, "k_coefficient": 9.5, "resettlement": 1.0}
+  Score:  83.2 / 100
+  Result: 💰 BỒI THƯỜNG MỨC CAO
+  Rules:  1 rules fired
+------------------------------
+CASE 006:
+  Inputs: {"land_type": 1.0, "usage_duration": 8.0, "area": 9.5, "k_coefficient": 4.0, "resettlement": 7.0}
+  Score:  39.4 / 100
+  Result: 📉 BỒI THƯỜNG MỨC THẤP
+  Rules:  2 rules fired
+------------------------------
+CASE 007:
+  Inputs: {"land_type": 6.5, "usage_duration": 3.5, "area": 4.5, "k_coefficient": 8.5, "resettlement": 10.0}
+  Score:  50.0 / 100
+  Result: 📊 BỒI THƯỜNG MỨC TRUNG BÌNH
+  Rules:  1 rules fired
+------------------------------
+CASE 008:
+  Inputs: {"land_type": 6.5, "usage_duration": 6.0, "area": 8.5, "k_coefficient": 7.5, "resettlement": 5.0}
+  Score:  50.0 / 100
+  Result: 📊 BỒI THƯỜNG MỨC TRUNG BÌNH
+  Rules:  0 rules fired
+------------------------------
+CASE 009:
+  Inputs: {"land_type": 3.5, "usage_duration": 6.5, "area": 4.5, "k_coefficient": 3.0, "resettlement": 6.0}
+  Score:  50.0 / 100
+  Result: 📊 BỒI THƯỜNG MỨC TRUNG BÌNH
+  Rules:  1 rules fired
+------------------------------
+CASE 010:
+  Inputs: {"land_type": 7.0, "usage_duration": 3.5, "area": 6.5, "k_coefficient": 0.5, "resettlement": 9.5}
+  Score:  50.0 / 100
+  Result: 📊 BỒI THƯỜNG MỨC TRUNG BÌNH
+  Rules:  1 rules fired
+------------------------------
+CASE 011:
+  Inputs: {"land_type": 7.5, "usage_duration": 1.0, "area": 3.5, "k_coefficient": 8.0, "resettlement": 4.5}
+  Score:  50.0 / 100
+  Result: 📊 BỒI THƯỜNG MỨC TRUNG BÌNH
+  Rules:  1 rules fired
+------------------------------
+CASE 012:
+  Inputs: {"land_type": 9.0, "usage_duration": 8.5, "area": 4.0, "k_coefficient": 4.5, "resettlement": 7.5}
+  Score:  81.9 / 100
+  Result: 💰 BỒI THƯỜNG MỨC CAO
+  Rules:  1 rules fired
+------------------------------
+CASE 013:
+  Inputs: {"land_type": 0.0, "usage_duration": 0.0, "area": 10.0, "k_coefficient": 8.0, "resettlement": 9.0}
+  Score:  50.0 / 100
+  Result: 📊 BỒI THƯỜNG MỨC TRUNG BÌNH
+  Rules:  0 rules fired
+------------------------------
+CASE 014:
+  Inputs: {"land_type": 6.5, "usage_duration": 0.0, "area": 9.0, "k_coefficient": 8.0, "resettlement": 1.5}
+  Score:  50.0 / 100
+  Result: 📊 BỒI THƯỜNG MỨC TRUNG BÌNH
+  Rules:  0 rules fired
+------------------------------
+CASE 015:
+  Inputs: {"land_type": 1.0, "usage_duration": 6.5, "area": 7.0, "k_coefficient": 3.5, "resettlement": 6.0}
+  Score:  50.0 / 100
+  Result: 📊 BỒI THƯỜNG MỨC TRUNG BÌNH
+  Rules:  1 rules fired
+------------------------------
+CASE 016:
+  Inputs: {"land_type": 9.0, "usage_duration": 6.0, "area": 7.5, "k_coefficient": 3.0, "resettlement": 9.0}
+  Score:  50.0 / 100
+  Result: 📊 BỒI THƯỜNG MỨC TRUNG BÌNH
+  Rules:  1 rules fired
+------------------------------
+CASE 017:
+  Inputs: {"land_type": 8.5, "usage_duration": 3.5, "area": 6.0, "k_coefficient": 9.5, "resettlement": 7.5}
+  Score:  75.2 / 100
+  Result: 💰 BỒI THƯỜNG MỨC CAO
+  Rules:  2 rules fired
+------------------------------
+CASE 018:
+  Inputs: {"land_type": 9.5, "usage_duration": 0.0, "area": 1.0, "k_coefficient": 2.5, "resettlement": 3.0}
+  Score:  50.0 / 100
+  Result: 📊 BỒI THƯỜNG MỨC TRUNG BÌNH
+  Rules:  0 rules fired
+------------------------------
+CASE 019:
+  Inputs: {"land_type": 4.0, "usage_duration": 0.0, "area": 7.0, "k_coefficient": 4.5, "resettlement": 9.0}
+  Score:  50.0 / 100
+  Result: 📊 BỒI THƯỜNG MỨC TRUNG BÌNH
+  Rules:  0 rules fired
+------------------------------
+CASE 020:
+  Inputs: {"land_type": 7.0, "usage_duration": 0.5, "area": 2.0, "k_coefficient": 1.0, "resettlement": 4.0}
+  Score:  16.4 / 100
+  Result: 📉 BỒI THƯỜNG MỨC THẤP
+  Rules:  1 rules fired
+------------------------------
+CASE 021:
+  Inputs: {"land_type": 9.0, "usage_duration": 3.0, "area": 4.5, "k_coefficient": 6.5, "resettlement": 8.5}
+  Score:  66.5 / 100
+  Result: 📊 BỒI THƯỜNG MỨC TRUNG BÌNH
+  Rules:  3 rules fired
+------------------------------
+CASE 022:
+  Inputs: {"land_type": 4.0, "usage_duration": 7.5, "area": 5.0, "k_coefficient": 4.0, "resettlement": 1.0}
+  Score:  50.0 / 100
+  Result: 📊 BỒI THƯỜNG MỨC TRUNG BÌNH
+  Rules:  0 rules fired
+------------------------------
+CASE 023:
+  Inputs: {"land_type": 4.0, "usage_duration": 5.0, "area": 8.5, "k_coefficient": 6.0, "resettlement": 4.0}
+  Score:  50.0 / 100
+  Result: 📊 BỒI THƯỜNG MỨC TRUNG BÌNH
+  Rules:  0 rules fired
+------------------------------
+CASE 024:
+  Inputs: {"land_type": 0.5, "usage_duration": 10.0, "area": 10.0, "k_coefficient": 10.0, "resettlement": 4.5}
+  Score:  50.0 / 100
+  Result: 📊 BỒI THƯỜNG MỨC TRUNG BÌNH
+  Rules:  0 rules fired
+------------------------------
+CASE 025:
+  Inputs: {"land_type": 9.0, "usage_duration": 8.0, "area": 3.0, "k_coefficient": 2.5, "resettlement": 2.5}
+  Score:  50.0 / 100
+  Result: 📊 BỒI THƯỜNG MỨC TRUNG BÌNH
+  Rules:  0 rules fired
+------------------------------
+
+>>> MODULE: THUẾ ĐẤT ĐAI (tax)
+--------------------------------------------------
+CASE 026:
+  Inputs: {"land_value": 0.5, "usage_purpose": 9.5}
+  Score:  50.0 / 100
+  Result: ⚠️ THUẾ SUẤT PHỔ THÔNG
+  Rules:  0 rules fired
+------------------------------
+CASE 027:
+  Inputs: {"land_value": 0.0, "usage_purpose": 0.5}
+  Score:  50.0 / 100
+  Result: ⚠️ THUẾ SUẤT PHỔ THÔNG
+  Rules:  0 rules fired
+------------------------------
+CASE 028:
+  Inputs: {"land_value": 6.0, "usage_purpose": 1.5}
+  Score:  50.0 / 100
+  Result: ⚠️ THUẾ SUẤT PHỔ THÔNG
+  Rules:  0 rules fired
+------------------------------
+CASE 029:
+  Inputs: {"land_value": 9.0, "usage_purpose": 1.0}
+  Score:  50.0 / 100
+  Result: ⚠️ THUẾ SUẤT PHỔ THÔNG
+  Rules:  0 rules fired
+------------------------------
+CASE 030:
+  Inputs: {"land_value": 7.0, "usage_purpose": 7.5}
+  Score:  50.0 / 100
+  Result: ⚠️ THUẾ SUẤT PHỔ THÔNG
+  Rules:  0 rules fired
+------------------------------
+CASE 031:
+  Inputs: {"land_value": 2.0, "usage_purpose": 1.5}
+  Score:  50.0 / 100
+  Result: ⚠️ THUẾ SUẤT PHỔ THÔNG
+  Rules:  0 rules fired
+------------------------------
+CASE 032:
+  Inputs: {"land_value": 7.5, "usage_purpose": 2.5}
+  Score:  50.0 / 100
+  Result: ⚠️ THUẾ SUẤT PHỔ THÔNG
+  Rules:  0 rules fired
+------------------------------
+CASE 033:
+  Inputs: {"land_value": 0.0, "usage_purpose": 7.0}
+  Score:  50.0 / 100
+  Result: ⚠️ THUẾ SUẤT PHỔ THÔNG
+  Rules:  0 rules fired
+------------------------------
+CASE 034:
+  Inputs: {"land_value": 6.5, "usage_purpose": 4.0}
+  Score:  50.0 / 100
+  Result: ⚠️ THUẾ SUẤT PHỔ THÔNG
+  Rules:  0 rules fired
+------------------------------
+CASE 035:
+  Inputs: {"land_value": 10.0, "usage_purpose": 5.0}
+  Score:  50.0 / 100
+  Result: ⚠️ THUẾ SUẤT PHỔ THÔNG
+  Rules:  0 rules fired
+------------------------------
+CASE 036:
+  Inputs: {"land_value": 2.0, "usage_purpose": 0.5}
+  Score:  50.0 / 100
+  Result: ⚠️ THUẾ SUẤT PHỔ THÔNG
+  Rules:  0 rules fired
+------------------------------
+CASE 037:
+  Inputs: {"land_value": 6.5, "usage_purpose": 6.5}
+  Score:  50.0 / 100
+  Result: ⚠️ THUẾ SUẤT PHỔ THÔNG
+  Rules:  0 rules fired
+------------------------------
+CASE 038:
+  Inputs: {"land_value": 5.5, "usage_purpose": 10.0}
+  Score:  50.0 / 100
+  Result: ⚠️ THUẾ SUẤT PHỔ THÔNG
+  Rules:  0 rules fired
+------------------------------
+CASE 039:
+  Inputs: {"land_value": 5.5, "usage_purpose": 9.0}
+  Score:  50.0 / 100
+  Result: ⚠️ THUẾ SUẤT PHỔ THÔNG
+  Rules:  0 rules fired
+------------------------------
+CASE 040:
+  Inputs: {"land_value": 8.0, "usage_purpose": 9.0}
+  Score:  50.0 / 100
+  Result: ⚠️ THUẾ SUẤT PHỔ THÔNG
+  Rules:  0 rules fired
+------------------------------
+CASE 041:
+  Inputs: {"land_value": 3.5, "usage_purpose": 1.0}
+  Score:  50.0 / 100
+  Result: ⚠️ THUẾ SUẤT PHỔ THÔNG
+  Rules:  0 rules fired
+------------------------------
+CASE 042:
+  Inputs: {"land_value": 3.5, "usage_purpose": 5.0}
+  Score:  50.0 / 100
+  Result: ⚠️ THUẾ SUẤT PHỔ THÔNG
+  Rules:  0 rules fired
+------------------------------
+CASE 043:
+  Inputs: {"land_value": 8.5, "usage_purpose": 9.5}
+  Score:  50.0 / 100
+  Result: ⚠️ THUẾ SUẤT PHỔ THÔNG
+  Rules:  0 rules fired
+------------------------------
+CASE 044:
+  Inputs: {"land_value": 0.0, "usage_purpose": 2.0}
+  Score:  50.0 / 100
+  Result: ⚠️ THUẾ SUẤT PHỔ THÔNG
+  Rules:  0 rules fired
+------------------------------
+CASE 045:
+  Inputs: {"land_value": 5.5, "usage_purpose": 7.0}
+  Score:  50.0 / 100
+  Result: ⚠️ THUẾ SUẤT PHỔ THÔNG
+  Rules:  0 rules fired
+------------------------------
+CASE 046:
+  Inputs: {"land_value": 2.5, "usage_purpose": 1.0}
+  Score:  50.0 / 100
+  Result: ⚠️ THUẾ SUẤT PHỔ THÔNG
+  Rules:  0 rules fired
+------------------------------
+CASE 047:
+  Inputs: {"land_value": 9.0, "usage_purpose": 9.5}
+  Score:  50.0 / 100
+  Result: ⚠️ THUẾ SUẤT PHỔ THÔNG
+  Rules:  0 rules fired
+------------------------------
+CASE 048:
+  Inputs: {"land_value": 1.0, "usage_purpose": 5.0}
+  Score:  50.0 / 100
+  Result: ⚠️ THUẾ SUẤT PHỔ THÔNG
+  Rules:  0 rules fired
+------------------------------
+CASE 049:
+  Inputs: {"land_value": 2.5, "usage_purpose": 9.0}
+  Score:  50.0 / 100
+  Result: ⚠️ THUẾ SUẤT PHỔ THÔNG
+  Rules:  0 rules fired
+------------------------------
+CASE 050:
+  Inputs: {"land_value": 9.0, "usage_purpose": 6.5}
+  Score:  50.0 / 100
+  Result: ⚠️ THUẾ SUẤT PHỔ THÔNG
+  Rules:  0 rules fired
+------------------------------
+
+>>> MODULE: CHUYỂN NHƯỢNG QUYỀN SỬ DỤNG ĐẤT (transfer)
+--------------------------------------------------
+CASE 051:
+  Inputs: {"legal_status": 2.5, "land_value": 3.0, "area": 4.0, "location": 5.0, "financial_obligation": 0.0}
+  Score:  50.0 / 100
+  Result: ⚠️ CẦN XEM XÉT THÊM
+  Rules:  0 rules fired
+------------------------------
+CASE 052:
+  Inputs: {"legal_status": 2.5, "land_value": 1.0, "area": 7.5, "location": 9.5, "financial_obligation": 4.5}
+  Score:  50.0 / 100
+  Result: ⚠️ CẦN XEM XÉT THÊM
+  Rules:  1 rules fired
+------------------------------
+CASE 053:
+  Inputs: {"legal_status": 5.0, "land_value": 8.0, "area": 4.5, "location": 2.5, "financial_obligation": 8.5}
+  Score:  50.0 / 100
+  Result: ⚠️ CẦN XEM XÉT THÊM
+  Rules:  0 rules fired
+------------------------------
+CASE 054:
+  Inputs: {"legal_status": 9.0, "land_value": 5.0, "area": 1.0, "location": 3.0, "financial_obligation": 1.0}
+  Score:  84.4 / 100
+  Result: ✅ KHẢ THI CAO
+  Rules:  1 rules fired
+------------------------------
+CASE 055:
+  Inputs: {"legal_status": 7.0, "land_value": 2.0, "area": 8.0, "location": 4.0, "financial_obligation": 1.0}
+  Score:  50.0 / 100
+  Result: ⚠️ CẦN XEM XÉT THÊM
+  Rules:  0 rules fired
+------------------------------
+CASE 056:
+  Inputs: {"legal_status": 0.5, "land_value": 3.5, "area": 6.0, "location": 1.5, "financial_obligation": 5.0}
+  Score:  50.0 / 100
+  Result: ⚠️ CẦN XEM XÉT THÊM
+  Rules:  0 rules fired
+------------------------------
+CASE 057:
+  Inputs: {"legal_status": 3.5, "land_value": 8.5, "area": 6.5, "location": 7.5, "financial_obligation": 5.0}
+  Score:  36.1 / 100
+  Result: ❌ KHẢ THI THẤP
+  Rules:  2 rules fired
+------------------------------
+CASE 058:
+  Inputs: {"legal_status": 6.5, "land_value": 3.0, "area": 6.0, "location": 2.5, "financial_obligation": 4.0}
+  Score:  50.0 / 100
+  Result: ⚠️ CẦN XEM XÉT THÊM
+  Rules:  0 rules fired
+------------------------------
+CASE 059:
+  Inputs: {"legal_status": 8.5, "land_value": 1.0, "area": 10.0, "location": 8.0, "financial_obligation": 0.5}
+  Score:  50.0 / 100
+  Result: ⚠️ CẦN XEM XÉT THÊM
+  Rules:  0 rules fired
+------------------------------
+CASE 060:
+  Inputs: {"legal_status": 8.5, "land_value": 9.0, "area": 0.0, "location": 7.5, "financial_obligation": 6.0}
+  Score:  50.0 / 100
+  Result: ⚠️ CẦN XEM XÉT THÊM
+  Rules:  0 rules fired
+------------------------------
+CASE 061:
+  Inputs: {"legal_status": 1.0, "land_value": 0.5, "area": 8.5, "location": 8.0, "financial_obligation": 0.5}
+  Score:  16.0 / 100
+  Result: ❌ KHẢ THI THẤP
+  Rules:  1 rules fired
+------------------------------
+CASE 062:
+  Inputs: {"legal_status": 6.5, "land_value": 5.5, "area": 9.5, "location": 8.0, "financial_obligation": 1.0}
+  Score:  63.1 / 100
+  Result: ⚠️ CẦN XEM XÉT THÊM
+  Rules:  2 rules fired
+------------------------------
+CASE 063:
+  Inputs: {"legal_status": 4.5, "land_value": 1.5, "area": 0.5, "location": 2.0, "financial_obligation": 0.0}
+  Score:  50.0 / 100
+  Result: ⚠️ CẦN XEM XÉT THÊM
+  Rules:  0 rules fired
+------------------------------
+CASE 064:
+  Inputs: {"legal_status": 2.5, "land_value": 4.5, "area": 10.0, "location": 7.5, "financial_obligation": 2.0}
+  Score:  22.1 / 100
+  Result: ❌ KHẢ THI THẤP
+  Rules:  3 rules fired
+------------------------------
+CASE 065:
+  Inputs: {"legal_status": 10.0, "land_value": 6.0, "area": 6.5, "location": 9.0, "financial_obligation": 7.5}
+  Score:  50.0 / 100
+  Result: ⚠️ CẦN XEM XÉT THÊM
+  Rules:  0 rules fired
+------------------------------
+CASE 066:
+  Inputs: {"legal_status": 8.5, "land_value": 3.5, "area": 3.5, "location": 5.5, "financial_obligation": 9.5}
+  Score:  81.2 / 100
+  Result: ✅ KHẢ THI CAO
+  Rules:  2 rules fired
+------------------------------
+CASE 067:
+  Inputs: {"legal_status": 9.5, "land_value": 9.0, "area": 1.0, "location": 8.5, "financial_obligation": 10.0}
+  Score:  50.0 / 100
+  Result: ⚠️ CẦN XEM XÉT THÊM
+  Rules:  1 rules fired
+------------------------------
+CASE 068:
+  Inputs: {"legal_status": 1.0, "land_value": 3.5, "area": 6.5, "location": 8.5, "financial_obligation": 10.0}
+  Score:  18.9 / 100
+  Result: ❌ KHẢ THI THẤP
+  Rules:  1 rules fired
+------------------------------
+CASE 069:
+  Inputs: {"legal_status": 4.0, "land_value": 8.0, "area": 3.5, "location": 2.0, "financial_obligation": 9.5}
+  Score:  50.0 / 100
+  Result: ⚠️ CẦN XEM XÉT THÊM
+  Rules:  0 rules fired
+------------------------------
+CASE 070:
+  Inputs: {"legal_status": 6.5, "land_value": 5.0, "area": 3.5, "location": 1.0, "financial_obligation": 3.0}
+  Score:  63.1 / 100
+  Result: ⚠️ CẦN XEM XÉT THÊM
+  Rules:  2 rules fired
+------------------------------
+CASE 071:
+  Inputs: {"legal_status": 6.0, "land_value": 3.0, "area": 9.0, "location": 2.0, "financial_obligation": 6.5}
+  Score:  50.0 / 100
+  Result: ⚠️ CẦN XEM XÉT THÊM
+  Rules:  0 rules fired
+------------------------------
+CASE 072:
+  Inputs: {"legal_status": 4.0, "land_value": 7.0, "area": 9.0, "location": 10.0, "financial_obligation": 7.0}
+  Score:  50.0 / 100
+  Result: ⚠️ CẦN XEM XÉT THÊM
+  Rules:  0 rules fired
+------------------------------
+CASE 073:
+  Inputs: {"legal_status": 4.5, "land_value": 4.0, "area": 0.5, "location": 5.0, "financial_obligation": 10.0}
+  Score:  50.0 / 100
+  Result: ⚠️ CẦN XEM XÉT THÊM
+  Rules:  1 rules fired
+------------------------------
+CASE 074:
+  Inputs: {"legal_status": 5.0, "land_value": 10.0, "area": 5.0, "location": 8.0, "financial_obligation": 1.5}
+  Score:  50.0 / 100
+  Result: ⚠️ CẦN XEM XÉT THÊM
+  Rules:  0 rules fired
+------------------------------
+CASE 075:
+  Inputs: {"legal_status": 5.0, "land_value": 1.0, "area": 8.0, "location": 8.0, "financial_obligation": 1.0}
+  Score:  50.0 / 100
+  Result: ⚠️ CẦN XEM XÉT THÊM
+  Rules:  0 rules fired
+------------------------------
+
+>>> MODULE: VI PHẠM HÀNH CHÍNH ĐẤT ĐAI (violation)
+--------------------------------------------------
+CASE 076:
+  Inputs: {"severity": 1.0, "violation_area": 5.5, "duration": 4.0, "recidivism": 9.0, "damage": 3.0}
+  Score:  17.9 / 100
+  Result: 🟢 MỨC PHẠT NHẸ / CẢNH CÁO
+  Rules:  1 rules fired
+------------------------------
+CASE 077:
+  Inputs: {"severity": 6.5, "violation_area": 8.0, "duration": 10.0, "recidivism": 6.0, "damage": 5.5}
+  Score:  50.0 / 100
+  Result: 🟡 MỨC PHẠT TRUNG BÌNH
+  Rules:  0 rules fired
+------------------------------
+CASE 078:
+  Inputs: {"severity": 0.0, "violation_area": 7.0, "duration": 4.5, "recidivism": 2.5, "damage": 7.0}
+  Score:  50.0 / 100
+  Result: 🟡 MỨC PHẠT TRUNG BÌNH
+  Rules:  0 rules fired
+------------------------------
+CASE 079:
+  Inputs: {"severity": 2.5, "violation_area": 0.5, "duration": 7.0, "recidivism": 9.5, "damage": 5.5}
+  Score:  50.0 / 100
+  Result: 🟡 MỨC PHẠT TRUNG BÌNH
+  Rules:  1 rules fired
+------------------------------
+CASE 080:
+  Inputs: {"severity": 2.0, "violation_area": 9.5, "duration": 9.5, "recidivism": 3.5, "damage": 3.5}
+  Score:  32.6 / 100
+  Result: 🟢 MỨC PHẠT NHẸ / CẢNH CÁO
+  Rules:  3 rules fired
+------------------------------
+CASE 081:
+  Inputs: {"severity": 3.0, "violation_area": 2.5, "duration": 6.5, "recidivism": 8.0, "damage": 4.5}
+  Score:  50.0 / 100
+  Result: 🟡 MỨC PHẠT TRUNG BÌNH
+  Rules:  1 rules fired
+------------------------------
+CASE 082:
+  Inputs: {"severity": 0.0, "violation_area": 3.5, "duration": 7.5, "recidivism": 5.0, "damage": 0.5}
+  Score:  50.0 / 100
+  Result: 🟡 MỨC PHẠT TRUNG BÌNH
+  Rules:  0 rules fired
+------------------------------
+CASE 083:
+  Inputs: {"severity": 5.5, "violation_area": 2.5, "duration": 3.0, "recidivism": 1.0, "damage": 7.0}
+  Score:  50.0 / 100
+  Result: 🟡 MỨC PHẠT TRUNG BÌNH
+  Rules:  0 rules fired
+------------------------------
+CASE 084:
+  Inputs: {"severity": 1.0, "violation_area": 3.5, "duration": 1.5, "recidivism": 3.5, "damage": 8.0}
+  Score:  18.8 / 100
+  Result: 🟢 MỨC PHẠT NHẸ / CẢNH CÁO
+  Rules:  2 rules fired
+------------------------------
+CASE 085:
+  Inputs: {"severity": 4.0, "violation_area": 1.5, "duration": 5.0, "recidivism": 2.0, "damage": 10.0}
+  Score:  50.0 / 100
+  Result: 🟡 MỨC PHẠT TRUNG BÌNH
+  Rules:  0 rules fired
+------------------------------
+CASE 086:
+  Inputs: {"severity": 2.0, "violation_area": 2.0, "duration": 8.5, "recidivism": 1.0, "damage": 6.0}
+  Score:  25.2 / 100
+  Result: 🟢 MỨC PHẠT NHẸ / CẢNH CÁO
+  Rules:  2 rules fired
+------------------------------
+CASE 087:
+  Inputs: {"severity": 6.0, "violation_area": 7.0, "duration": 0.5, "recidivism": 10.0, "damage": 5.0}
+  Score:  50.0 / 100
+  Result: 🟡 MỨC PHẠT TRUNG BÌNH
+  Rules:  0 rules fired
+------------------------------
+CASE 088:
+  Inputs: {"severity": 5.0, "violation_area": 0.5, "duration": 2.0, "recidivism": 5.5, "damage": 1.5}
+  Score:  50.0 / 100
+  Result: 🟡 MỨC PHẠT TRUNG BÌNH
+  Rules:  1 rules fired
+------------------------------
+CASE 089:
+  Inputs: {"severity": 4.5, "violation_area": 0.5, "duration": 4.5, "recidivism": 6.0, "damage": 4.0}
+  Score:  50.0 / 100
+  Result: 🟡 MỨC PHẠT TRUNG BÌNH
+  Rules:  1 rules fired
+------------------------------
+CASE 090:
+  Inputs: {"severity": 2.0, "violation_area": 0.0, "duration": 5.5, "recidivism": 10.0, "damage": 4.0}
+  Score:  50.0 / 100
+  Result: 🟡 MỨC PHẠT TRUNG BÌNH
+  Rules:  0 rules fired
+------------------------------
+CASE 091:
+  Inputs: {"severity": 8.0, "violation_area": 2.0, "duration": 4.0, "recidivism": 7.5, "damage": 3.5}
+  Score:  50.0 / 100
+  Result: 🟡 MỨC PHẠT TRUNG BÌNH
+  Rules:  0 rules fired
+------------------------------
+CASE 092:
+  Inputs: {"severity": 4.0, "violation_area": 6.0, "duration": 9.0, "recidivism": 3.0, "damage": 1.0}
+  Score:  50.0 / 100
+  Result: 🟡 MỨC PHẠT TRUNG BÌNH
+  Rules:  1 rules fired
+------------------------------
+CASE 093:
+  Inputs: {"severity": 2.5, "violation_area": 2.0, "duration": 6.0, "recidivism": 6.5, "damage": 0.0}
+  Score:  50.0 / 100
+  Result: 🟡 MỨC PHẠT TRUNG BÌNH
+  Rules:  0 rules fired
+------------------------------
+CASE 094:
+  Inputs: {"severity": 0.5, "violation_area": 8.0, "duration": 7.0, "recidivism": 0.0, "damage": 0.5}
+  Score:  16.0 / 100
+  Result: 🟢 MỨC PHẠT NHẸ / CẢNH CÁO
+  Rules:  1 rules fired
+------------------------------
+CASE 095:
+  Inputs: {"severity": 3.0, "violation_area": 0.0, "duration": 7.0, "recidivism": 7.0, "damage": 8.0}
+  Score:  81.9 / 100
+  Result: 🔴 MỨC PHẠT NẶNG
+  Rules:  1 rules fired
+------------------------------
+CASE 096:
+  Inputs: {"severity": 4.5, "violation_area": 4.0, "duration": 2.0, "recidivism": 9.0, "damage": 5.0}
+  Score:  50.0 / 100
+  Result: 🟡 MỨC PHẠT TRUNG BÌNH
+  Rules:  0 rules fired
+------------------------------
+CASE 097:
+  Inputs: {"severity": 0.5, "violation_area": 4.5, "duration": 10.0, "recidivism": 4.5, "damage": 2.0}
+  Score:  16.0 / 100
+  Result: 🟢 MỨC PHẠT NHẸ / CẢNH CÁO
+  Rules:  1 rules fired
+------------------------------
+CASE 098:
+  Inputs: {"severity": 7.0, "violation_area": 2.0, "duration": 5.5, "recidivism": 5.5, "damage": 3.0}
+  Score:  50.0 / 100
+  Result: 🟡 MỨC PHẠT TRUNG BÌNH
+  Rules:  0 rules fired
+------------------------------
+CASE 099:
+  Inputs: {"severity": 3.5, "violation_area": 7.0, "duration": 4.5, "recidivism": 6.0, "damage": 4.0}
+  Score:  50.0 / 100
+  Result: 🟡 MỨC PHẠT TRUNG BÌNH
+  Rules:  1 rules fired
+------------------------------
+CASE 100:
+  Inputs: {"severity": 2.0, "violation_area": 6.0, "duration": 8.0, "recidivism": 4.0, "damage": 7.0}
+  Score:  50.0 / 100
+  Result: 🟡 MỨC PHẠT TRUNG BÌNH
+  Rules:  0 rules fired
+------------------------------
+
+================================================================================
+KẾT THÚC KIỂM THỬ
+================================================================================

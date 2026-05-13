@@ -1,18 +1,19 @@
 """
-Dashboard View - Statistics overview and quick access to modules.
+Dashboard View - Statistics overview, quick access, and recent activity.
 """
 from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QLabel,
-                              QFrame, QGridLayout, QPushButton, QScrollArea)
-from PyQt6.QtCore import Qt, pyqtSignal, QRect, QPoint
-from PyQt6.QtGui import QPainter, QColor, QFont, QPen
-
+                              QFrame, QGridLayout, QPushButton, QScrollArea,
+                              QTableWidget, QTableWidgetItem, QHeaderView, QSizePolicy)
+from PyQt6.QtCore import Qt, pyqtSignal, QRect, QPoint, QTimer
+from PyQt6.QtGui import QPainter, QColor, QFont, QPen, QBrush, QLinearGradient
+from datetime import datetime
 
 class BarChart(QWidget):
-    """A simple custom bar chart widget."""
+    """A beautiful custom bar chart widget."""
     def __init__(self, data=None, parent=None):
         super().__init__(parent)
         self.data = data or {} # {"label": value}
-        self.setMinimumHeight(200)
+        self.setMinimumHeight(220)
 
     def set_data(self, data):
         self.data = data
@@ -33,65 +34,84 @@ class BarChart(QWidget):
         bar_width = (width - 2 * margin) / len(self.data)
         
         # Colors
-        bar_color = QColor("#667eea")
-        text_color = QColor("#888")
+        text_color = QColor("#a0aec0")
         
         for i, (label, val) in enumerate(self.data.items()):
-            # Calculate rect
             bar_height = (val / max_val) * (height - margin)
-            x = margin + i * bar_width + 10
+            x = margin + i * bar_width + 15
             y = height - bar_height
             
-            # Draw bar
-            painter.setBrush(bar_color)
+            # Gradient for bar
+            gradient = QLinearGradient(0, y, 0, height)
+            gradient.setColorAt(0.0, QColor("#667eea"))
+            gradient.setColorAt(1.0, QColor("#764ba2"))
+            
+            painter.setBrush(QBrush(gradient))
             painter.setPen(Qt.PenStyle.NoPen)
-            painter.drawRoundedRect(int(x), int(y), int(bar_width - 20), int(bar_height), 5, 5)
+            # Draw bar with rounded top corners
+            painter.drawRoundedRect(int(x), int(y), int(bar_width - 30), int(bar_height), 6, 6)
             
             # Draw label
             painter.setPen(text_color)
-            painter.setFont(QFont("Arial", 8))
-            painter.drawText(QRect(int(x - 10), int(height + 5), int(bar_width), 20), 
+            painter.setFont(QFont("Segoe UI", 9))
+            painter.drawText(QRect(int(x - 15), int(height + 10), int(bar_width), 20), 
                              Qt.AlignmentFlag.AlignCenter, label)
             
             # Draw value
-            painter.drawText(QRect(int(x - 10), int(y - 20), int(bar_width), 20), 
+            painter.setPen(QColor("#ffffff"))
+            painter.setFont(QFont("Segoe UI", 10, QFont.Weight.Bold))
+            painter.drawText(QRect(int(x - 15), int(y - 25), int(bar_width), 20), 
                              Qt.AlignmentFlag.AlignCenter, str(val))
 
 
 class DashboardView(QWidget):
-    """Dashboard with statistics and module quick access."""
+    """Dashboard with statistics, quick access, and recent activity."""
 
-    module_selected = pyqtSignal(str)  # Emitted when a module card is clicked
+    module_selected = pyqtSignal(str)
+    action_requested = pyqtSignal(str)  # users, rules, history
 
     def __init__(self, consultation_controller, history_controller):
         super().__init__()
         self.consultation_ctrl = consultation_controller
         self.history_ctrl = history_controller
+        self.user = self.history_ctrl.auth.get_current_user()
         self._setup_ui()
+        # Auto-refresh timer
+        self.refresh_timer = QTimer(self)
+        self.refresh_timer.timeout.connect(self.refresh_data)
+        self.refresh_timer.start(30000) # Refresh every 30s
 
     def _setup_ui(self):
         layout = QVBoxLayout(self)
         layout.setSpacing(20)
         layout.setContentsMargins(30, 20, 30, 20)
 
-        # Page title
-        title = QLabel("📊  Dashboard")
+        # Header
+        header_layout = QVBoxLayout()
+        header_layout.setSpacing(5)
+        
+        greeting = f"👋 Xin chào, {self.user['full_name']}!" if self.user else "📊 Dashboard"
+        title = QLabel(greeting)
         title.setObjectName("page_title")
-        layout.addWidget(title)
+        title.setStyleSheet("font-size: 24pt; font-weight: bold; color: #fff;")
+        header_layout.addWidget(title)
 
-        subtitle = QLabel("Tổng quan hệ thống tư vấn pháp lý")
+        subtitle = QLabel("Tổng quan tình hình tư vấn pháp lý và trạng thái hệ thống")
         subtitle.setObjectName("page_subtitle")
-        layout.addWidget(subtitle)
+        subtitle.setStyleSheet("font-size: 11pt; color: #a0aec0;")
+        header_layout.addWidget(subtitle)
+        
+        layout.addLayout(header_layout)
 
-        # Statistics cards
+        # Statistics cards (Top Row)
         stats_layout = QHBoxLayout()
         stats_layout.setSpacing(15)
 
-        self.stat_total = self._create_stat_card("0", "Tổng số tư vấn", "📋")
-        self.stat_transfer = self._create_stat_card("0", "Chuyển nhượng", "🔄")
-        self.stat_compensation = self._create_stat_card("0", "Bồi thường", "💰")
-        self.stat_violation = self._create_stat_card("0", "Vi phạm", "⚖️")
-        self.stat_tax = self._create_stat_card("0", "Thuế đất", "💲")
+        self.stat_total = self._create_stat_card("0", "Tổng tư vấn", "📋", "#3182ce")
+        self.stat_transfer = self._create_stat_card("0", "Chuyển nhượng", "🔄", "#38a169")
+        self.stat_compensation = self._create_stat_card("0", "Bồi thường", "💰", "#d69e2e")
+        self.stat_violation = self._create_stat_card("0", "Vi phạm", "⚖️", "#e53e3e")
+        self.stat_tax = self._create_stat_card("0", "Thuế đất", "💲", "#805ad5")
 
         stats_layout.addWidget(self.stat_total)
         stats_layout.addWidget(self.stat_transfer)
@@ -100,135 +120,227 @@ class DashboardView(QWidget):
         stats_layout.addWidget(self.stat_tax)
         layout.addLayout(stats_layout)
 
-        # Module section title
-        section_label = QLabel("🚀  Chọn Module Tư Vấn")
-        section_label.setProperty("class", "section_title")
-        layout.addWidget(section_label)
+        # Middle Row: Modules & Quick Actions
+        mid_layout = QHBoxLayout()
+        mid_layout.setSpacing(20)
 
-        # Module cards
-        modules_layout = QHBoxLayout()
-        modules_layout.setSpacing(15)
-
-        modules = self.consultation_ctrl.get_available_modules()
-        for mod in modules:
-            card = self._create_module_card(
-                mod["icon"], mod["display_name"], mod["description"], mod["name"]
-            )
-            modules_layout.addWidget(card)
-
-        # Fill remaining space if fewer than 3 modules
-        while modules_layout.count() < 3:
-            spacer = QWidget()
-            modules_layout.addWidget(spacer)
-
-        layout.addLayout(modules_layout)
-
-        # Info section
-        info_frame = QFrame()
-        info_frame.setProperty("class", "card")
-        info_frame.setStyleSheet("""
-            QFrame { background-color: #22252d; border: 1px solid #2a2d35;
-                     border-radius: 12px; padding: 20px; }
-        """)
-        info_layout = QVBoxLayout(info_frame)
-        info_title = QLabel("ℹ️  Về Hệ Thống")
-        info_title.setProperty("class", "card_title")
-        info_layout.addWidget(info_title)
-
-        info_text = QLabel(
-            "Hệ thống chuyên gia tư vấn pháp lý sử dụng Fuzzy Logic (Mamdani) "
-            "để đánh giá và tư vấn các vấn đề liên quan đến Luật Đất đai 2024.\n\n"
-            "• Cơ sở pháp lý: Luật Đất đai 2024, NĐ 88/2024, NĐ 91/2019\n"
-            "• Phương pháp: Suy diễn mờ Mamdani với defuzzification Centroid\n"
-            "• Thiết kế: MVC, plugin-based, có khả năng mở rộng"
-        )
-        info_text.setWordWrap(True)
-        info_text.setStyleSheet("color: #888; line-height: 1.6;")
-        info_layout.addWidget(info_text)
-        layout.addWidget(info_frame)
-
-        # Recent Activity / Chart Section
-        chart_section = QHBoxLayout()
+        # Left: Modules
+        modules_frame = QFrame()
+        modules_layout = QVBoxLayout(modules_frame)
+        modules_layout.setContentsMargins(0, 0, 0, 0)
         
+        section_label = QLabel("🚀 Chọn Module Tư Vấn")
+        section_label.setStyleSheet("font-size: 14pt; font-weight: bold; color: #e2e8f0; margin-bottom: 10px;")
+        modules_layout.addWidget(section_label)
+
+        mod_grid = QGridLayout()
+        mod_grid.setSpacing(15)
+        modules = self.consultation_ctrl.get_available_modules()
+        for i, mod in enumerate(modules):
+            card = self._create_module_card(mod["icon"], mod["display_name"], mod["description"], mod["name"])
+            mod_grid.addWidget(card, i // 2, i % 2) # 2 columns
+            
+        modules_layout.addLayout(mod_grid)
+        modules_layout.addStretch()
+        mid_layout.addWidget(modules_frame, stretch=2)
+
+        # Right: Quick Actions (Only for admin or those with permissions)
+        if self.user and self.user.get('role') == 'admin':
+            actions_frame = QFrame()
+            actions_layout = QVBoxLayout(actions_frame)
+            actions_layout.setContentsMargins(0, 0, 0, 0)
+            
+            action_label = QLabel("⚡ Thao tác nhanh")
+            action_label.setStyleSheet("font-size: 14pt; font-weight: bold; color: #e2e8f0; margin-bottom: 10px;")
+            actions_layout.addWidget(action_label)
+            
+            btn_users = self._create_action_btn("👥 Quản lý người dùng", "#4299e1")
+            btn_users.clicked.connect(lambda: self.action_requested.emit("users"))
+            
+            btn_rules = self._create_action_btn("⚙️ Quản lý luật mờ", "#48bb78")
+            btn_rules.clicked.connect(lambda: self.action_requested.emit("rules"))
+            
+            btn_history = self._create_action_btn("📜 Xem toàn bộ lịch sử", "#ed8936")
+            btn_history.clicked.connect(lambda: self.action_requested.emit("history"))
+            
+            actions_layout.addWidget(btn_users)
+            actions_layout.addWidget(btn_rules)
+            actions_layout.addWidget(btn_history)
+            actions_layout.addStretch()
+            
+            mid_layout.addWidget(actions_frame, stretch=1)
+            
+        layout.addLayout(mid_layout)
+
+        # Bottom Row: Chart & Recent Activity
+        bottom_layout = QHBoxLayout()
+        bottom_layout.setSpacing(20)
+
         # Left: Chart
-        self.chart_card = QFrame()
-        self.chart_card.setProperty("class", "card")
-        self.chart_card.setMinimumWidth(400)
-        chart_layout = QVBoxLayout(self.chart_card)
-        chart_layout.addWidget(QLabel("📈 Thống kê theo nghiệp vụ"))
+        chart_card = self._create_panel("📈 Thống kê theo nghiệp vụ")
+        chart_layout = QVBoxLayout(chart_card)
         self.bar_chart = BarChart()
         chart_layout.addWidget(self.bar_chart)
-        chart_section.addWidget(self.chart_card)
+        bottom_layout.addWidget(chart_card, stretch=1)
         
-        layout.addLayout(chart_section)
+        # Right: Recent Activity
+        recent_card = self._create_panel("🕒 Hoạt động gần đây")
+        recent_layout = QVBoxLayout(recent_card)
+        
+        self.recent_table = QTableWidget(0, 4)
+        self.recent_table.setHorizontalHeaderLabels(["Thời gian", "Người dùng", "Nghiệp vụ", "Kết quả"])
+        self.recent_table.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
+        self.recent_table.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeMode.ResizeToContents)
+        self.recent_table.verticalHeader().setVisible(False)
+        self.recent_table.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
+        self.recent_table.setSelectionBehavior(QTableWidget.SelectionBehavior.SelectRows)
+        self.recent_table.setAlternatingRowColors(True)
+        self.recent_table.setStyleSheet("""
+            QTableWidget {
+                background-color: transparent;
+                border: none;
+                color: #e2e8f0;
+                gridline-color: #2d3748;
+            }
+            QTableWidget::item { padding: 10px; border-bottom: 1px solid #2d3748; }
+            QHeaderView::section {
+                background-color: #1a202c;
+                color: #a0aec0;
+                font-weight: bold;
+                border: none;
+                padding: 10px;
+                text-align: left;
+            }
+        """)
+        recent_layout.addWidget(self.recent_table)
+        bottom_layout.addWidget(recent_card, stretch=1)
+
+        layout.addLayout(bottom_layout)
         layout.addStretch()
 
-    def _create_stat_card(self, value, label, icon):
-        """Create a statistics card."""
-        card = QFrame()
-        card.setProperty("class", "stat_card")
-        card.setStyleSheet("""
-            QFrame { background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
-                stop:0 #22252d, stop:1 #2a2d38);
-                border: 1px solid #2a2d35; border-radius: 12px; padding: 20px; }
+    def _create_panel(self, title_text):
+        panel = QFrame()
+        panel.setStyleSheet("""
+            QFrame {
+                background-color: #1e293b;
+                border: 1px solid #334155;
+                border-radius: 12px;
+            }
         """)
-        card_layout = QVBoxLayout(card)
+        layout = QVBoxLayout(panel)
+        layout.setContentsMargins(20, 20, 20, 20)
+        title = QLabel(title_text)
+        title.setStyleSheet("font-size: 13pt; font-weight: bold; color: #fff; border: none; background: transparent;")
+        layout.addWidget(title)
+        return panel
 
+    def _create_action_btn(self, text, hover_color):
+        btn = QPushButton(text)
+        btn.setCursor(Qt.CursorShape.PointingHandCursor)
+        btn.setStyleSheet(f"""
+            QPushButton {{
+                background-color: #1e293b;
+                color: #e2e8f0;
+                border: 1px solid #334155;
+                border-radius: 8px;
+                padding: 15px;
+                font-size: 11pt;
+                font-weight: bold;
+                text-align: left;
+            }}
+            QPushButton:hover {{
+                background-color: {hover_color};
+                color: white;
+                border-color: {hover_color};
+            }}
+        """)
+        return btn
+
+    def _create_stat_card(self, value, label, icon, highlight_color):
+        """Create a highly aesthetic statistics card."""
+        card = QFrame()
+        card.setStyleSheet(f"""
+            QFrame {{
+                background-color: #1e293b;
+                border: 1px solid #334155;
+                border-radius: 12px;
+            }}
+            QFrame:hover {{
+                border-color: {highlight_color};
+            }}
+        """)
+        
+        layout = QHBoxLayout(card)
+        layout.setContentsMargins(20, 20, 20, 20)
+        
+        # Left side: Text
+        text_layout = QVBoxLayout()
+        val_label = QLabel(value)
+        val_label.setStyleSheet(f"font-size: 24pt; font-weight: bold; color: {highlight_color}; border: none;")
+        card.value_label = val_label # Store reference
+        
+        name_label = QLabel(label)
+        name_label.setStyleSheet("font-size: 10pt; color: #94a3b8; border: none;")
+        
+        text_layout.addWidget(val_label)
+        text_layout.addWidget(name_label)
+        
+        # Right side: Icon
         icon_label = QLabel(icon)
-        icon_label.setStyleSheet("font-size: 24pt;")
-        card_layout.addWidget(icon_label)
-
-        value_label = QLabel(value)
-        value_label.setObjectName(f"stat_value_{label}")
-        value_label.setProperty("class", "stat_value")
-        value_label.setStyleSheet("font-size: 28pt; font-weight: bold; color: #667eea;")
-        card_layout.addWidget(value_label)
-
-        text_label = QLabel(label)
-        text_label.setProperty("class", "stat_label")
-        text_label.setStyleSheet("font-size: 9pt; color: #888;")
-        card_layout.addWidget(text_label)
-
-        # Store reference for updating
-        card.value_label = value_label
+        icon_label.setStyleSheet("font-size: 28pt; border: none; background: transparent;")
+        
+        layout.addLayout(text_layout)
+        layout.addStretch()
+        layout.addWidget(icon_label)
+        
         return card
 
     def _create_module_card(self, icon, title, description, module_name):
-        """Create a clickable module card."""
+        """Create a beautiful clickable module card."""
         card = QPushButton()
         card.setCursor(Qt.CursorShape.PointingHandCursor)
+        card.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
         card.setStyleSheet("""
             QPushButton {
-                background-color: #22252d; border: 1px solid #2a2d35;
-                border-radius: 12px; padding: 25px; text-align: left;
+                background-color: #1e293b;
+                border: 1px solid #334155;
+                border-radius: 12px;
+                padding: 20px;
+                text-align: left;
             }
             QPushButton:hover {
+                background-color: #2d3748;
                 border-color: #667eea;
-                background-color: #262a33;
             }
         """)
 
         card_layout = QVBoxLayout(card)
-        card_layout.setSpacing(8)
+        card_layout.setSpacing(10)
 
+        header_layout = QHBoxLayout()
         icon_label = QLabel(icon)
-        icon_label.setStyleSheet("font-size: 32pt;")
-        card_layout.addWidget(icon_label)
-
+        icon_label.setStyleSheet("font-size: 24pt; background: transparent; border: none;")
+        
         title_label = QLabel(title)
-        title_label.setStyleSheet("font-size: 13pt; font-weight: bold; color: #fff;")
+        title_label.setStyleSheet("font-size: 12pt; font-weight: bold; color: #fff; background: transparent; border: none;")
         title_label.setWordWrap(True)
-        card_layout.addWidget(title_label)
+        
+        header_layout.addWidget(icon_label)
+        header_layout.addWidget(title_label, stretch=1)
+        card_layout.addLayout(header_layout)
 
         desc_label = QLabel(description)
-        desc_label.setStyleSheet("font-size: 9pt; color: #888;")
+        desc_label.setStyleSheet("font-size: 9pt; color: #94a3b8; background: transparent; border: none;")
         desc_label.setWordWrap(True)
         card_layout.addWidget(desc_label)
 
-        card_layout.addStretch()
-
         card.clicked.connect(lambda: self.module_selected.emit(module_name))
         return card
+
+    def refresh_data(self):
+        """Refresh dashboard statistics and recent history."""
+        self.refresh_stats()
+        self.refresh_recent_activity()
 
     def refresh_stats(self):
         """Refresh dashboard statistics."""
@@ -249,5 +361,52 @@ class DashboardView(QWidget):
                 "Thuế": by_module.get("tax", 0)
             }
             self.bar_chart.set_data(chart_data)
-        except Exception:
-            pass
+        except Exception as e:
+            print(f"Error refreshing stats: {e}")
+
+    def refresh_recent_activity(self):
+        """Fetch and display recent cases."""
+        try:
+            # Always get recent cases globally for admin, or personal for user
+            recent_cases = self.history_ctrl.get_history(limit=5)
+            self.recent_table.setRowCount(0)
+            
+            for row_idx, case in enumerate(recent_cases):
+                self.recent_table.insertRow(row_idx)
+                
+                # Format time
+                created_at = case.get("created_at", "")
+                if created_at:
+                    try:
+                        dt = datetime.fromisoformat(created_at)
+                        time_str = dt.strftime("%H:%M %d/%m")
+                    except:
+                        time_str = created_at[:16]
+                else:
+                    time_str = "N/A"
+                    
+                user_name = case.get("user_name", "Unknown")
+                module = case.get("module", "")
+                
+                # Format conclusion
+                score = case.get("score", 0)
+                conclusion = case.get("conclusion", "")
+                result_str = f"{score:.1f} - {conclusion}"
+                
+                item_time = QTableWidgetItem(time_str)
+                item_user = QTableWidgetItem(user_name)
+                item_mod = QTableWidgetItem(module)
+                item_res = QTableWidgetItem(result_str)
+                
+                self.recent_table.setItem(row_idx, 0, item_time)
+                self.recent_table.setItem(row_idx, 1, item_user)
+                self.recent_table.setItem(row_idx, 2, item_mod)
+                self.recent_table.setItem(row_idx, 3, item_res)
+                
+        except Exception as e:
+            print(f"Error refreshing recent activity: {e}")
+
+    def showEvent(self, event):
+        """Called when view becomes visible."""
+        super().showEvent(event)
+        self.refresh_data()

@@ -157,6 +157,8 @@ class MainWindow(QMainWindow):
             self.consultation_ctrl, self.history_ctrl)
         self.dashboard_view.module_selected.connect(
             lambda m: self._open_consultation(m))
+        self.dashboard_view.action_requested.connect(
+            lambda action: self._switch_view(action))
         self.content_stack.addWidget(self.dashboard_view)
         self.views["dashboard"] = self.dashboard_view
 

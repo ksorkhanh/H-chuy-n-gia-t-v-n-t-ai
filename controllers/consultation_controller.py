@@ -36,6 +36,13 @@ class ConsultationController:
             return module.get_input_fields()
         return []
 
+    def get_module_config(self, module_name):
+        """Get full configuration for a module."""
+        module = self.module_loader.get_module(module_name)
+        if module:
+            return module.get_config()
+        return {}
+
     def run_consultation(self, module_name, inputs):
         """
         Run a full consultation.

@@ -2,25 +2,49 @@
   "module": "tax",
   "display_name": "Thuế đất đai",
   "icon": "💲",
-  "description": "Tư vấn và ước tính thuế suất/phí sử dụng đất.",
+  "domain": "dat_dai",
+  "description": "Tư vấn và ước tính thuế suất, tiền sử dụng đất, lệ phí trước bạ theo Luật Đất đai 2024.",
   "input_variables": [
     {
       "name": "land_value",
       "label": "Giá trị đất (theo khung giá)",
       "range": [0, 10],
+      "unit": "điểm",
       "membership_functions": [
-        {"name": "low", "type": "triangular", "params": [0, 0, 5]},
-        {"name": "medium", "type": "triangular", "params": [2, 5, 8]},
-        {"name": "high", "type": "triangular", "params": [5, 10, 10]}
+        {"name": "low", "label": "Thấp", "type": "triangular", "params": [0, 0, 5]},
+        {"name": "medium", "label": "Trung bình", "type": "triangular", "params": [2, 5, 8]},
+        {"name": "high", "label": "Cao", "type": "triangular", "params": [5, 10, 10]}
       ]
     },
     {
       "name": "usage_purpose",
       "label": "Mục đích sử dụng",
       "range": [0, 10],
+      "unit": "điểm",
       "membership_functions": [
-        {"name": "residential", "type": "triangular", "params": [0, 0, 5]},
-        {"name": "commercial", "type": "triangular", "params": [5, 10, 10]}
+        {"name": "residential", "label": "Đất ở/Nông nghiệp", "type": "triangular", "params": [0, 0, 5]},
+        {"name": "commercial", "label": "Thương mại/Dịch vụ", "type": "triangular", "params": [5, 10, 10]}
+      ]
+    },
+    {
+      "name": "area_size",
+      "label": "Diện tích đất",
+      "range": [0, 10],
+      "unit": "điểm",
+      "membership_functions": [
+        {"name": "within_limit", "label": "Trong hạn mức", "type": "triangular", "params": [0, 0, 5]},
+        {"name": "over_limit", "label": "Vượt hạn mức", "type": "triangular", "params": [5, 10, 10]}
+      ]
+    },
+    {
+      "name": "location_type",
+      "label": "Vị trí khu đất",
+      "range": [0, 10],
+      "unit": "điểm",
+      "membership_functions": [
+        {"name": "remote", "label": "Vùng sâu xa", "type": "triangular", "params": [0, 0, 4]},
+        {"name": "rural", "label": "Nông thôn", "type": "triangular", "params": [2, 5, 8]},
+        {"name": "urban", "label": "Đô thị", "type": "triangular", "params": [6, 10, 10]}
       ]
     }
   ],
@@ -28,32 +52,59 @@
     "name": "tax_rate",
     "label": "Thuế suất dự kiến",
     "range": [0, 100],
+    "unit": "điểm",
     "membership_functions": [
-      {"name": "preferential", "type": "triangular", "params": [0, 0, 40]},
-      {"name": "standard", "type": "triangular", "params": [30, 50, 70]},
-      {"name": "high_tax", "type": "triangular", "params": [60, 100, 100]}
+      {"name": "preferential", "label": "Ưu đãi/Miễn giảm", "type": "triangular", "params": [0, 0, 40]},
+      {"name": "standard", "label": "Tiêu chuẩn", "type": "triangular", "params": [30, 50, 70]},
+      {"name": "high_tax", "label": "Thuế cao", "type": "triangular", "params": [60, 100, 100]}
     ]
   },
   "input_fields": [
     {
       "name": "land_value",
       "label": "Giá trị đất",
-      "description": "Giá trị đất theo bảng giá đất của UBND tỉnh (0: thấp - 10: rất cao)",
-      "type": "slider",
-      "min": 0,
-      "max": 10,
-      "step": 0.5,
+      "description": "Giá trị đất theo bảng giá đất của UBND tỉnh",
+      "type": "combo",
+      "options": [
+        {"value": 1, "label": "Thấp (Khu vực nông thôn, ven đô)"},
+        {"value": 5, "label": "Trung bình (Khu dân cư tiêu chuẩn)"},
+        {"value": 9, "label": "Cao (Mặt tiền, trung tâm đô thị)"}
+      ],
       "default": 5
     },
     {
       "name": "usage_purpose",
       "label": "Mục đích sử dụng",
-      "description": "Mục đích sử dụng đất (0: nông nghiệp/để ở - 10: sản xuất kinh doanh)",
-      "type": "slider",
-      "min": 0,
-      "max": 10,
-      "step": 0.5,
-      "default": 2
+      "description": "Phân loại mục đích sử dụng đất",
+      "type": "combo",
+      "options": [
+        {"value": 1, "label": "Đất ở trong hạn mức, đất nông nghiệp"},
+        {"value": 9, "label": "Đất thương mại, dịch vụ, phi nông nghiệp khác"}
+      ],
+      "default": 1
+    },
+    {
+      "name": "area_size",
+      "label": "Diện tích đất",
+      "description": "So sánh diện tích thực tế với hạn mức giao đất của địa phương",
+      "type": "combo",
+      "options": [
+        {"value": 1, "label": "Trong hạn mức giao đất"},
+        {"value": 9, "label": "Vượt hạn mức giao đất quy định"}
+      ],
+      "default": 1
+    },
+    {
+      "name": "location_type",
+      "label": "Vị trí khu đất",
+      "description": "Phân loại vị trí khu đất theo khu vực phát triển",
+      "type": "combo",
+      "options": [
+        {"value": 1, "label": "Vùng sâu, vùng xa, đặc biệt khó khăn"},
+        {"value": 5, "label": "Nông thôn, đồng bằng thông thường"},
+        {"value": 9, "label": "Đô thị, thành phố trực thuộc trung ương"}
+      ],
+      "default": 5
     }
   ]
 }

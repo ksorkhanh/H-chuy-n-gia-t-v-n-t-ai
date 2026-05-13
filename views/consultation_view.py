@@ -17,7 +17,7 @@ class ConsultationView(QWidget):
         super().__init__()
         self.controller = consultation_controller
         self.current_module = None
-        self.sliders = {}
+        self.input_widgets = {}
         self.value_labels = {}
         self._setup_ui()
 
@@ -134,16 +134,20 @@ class ConsultationView(QWidget):
         self._build_form(module_name)
 
     def _build_form(self, module_name):
-        """Build dynamic input form from module config."""
+        """Build dynamic input form using dropdowns from module config."""
         # Clear existing form
-        self.sliders = {}
+        self.input_widgets = {}
         self.value_labels = {}
         while self.form_layout_inner.count():
             item = self.form_layout_inner.takeAt(0)
             if item.widget():
                 item.widget().deleteLater()
 
+        # Get full config for membership functions
+        config = self.controller.get_module_config(module_name)
+        input_vars = {v["name"]: v for v in config.get("input_variables", [])}
         fields = self.controller.get_input_fields(module_name)
+
         for field in fields:
             group = QFrame()
             group.setStyleSheet("""
@@ -159,7 +163,7 @@ class ConsultationView(QWidget):
             label.setStyleSheet("font-weight: bold; font-size: 10pt; color: #fff;")
             header.addWidget(label)
 
-            value_label = QLabel(str(field.get('default', 5)))
+            value_label = QLabel("0.0")
             value_label.setStyleSheet(
                 "font-size: 14pt; font-weight: bold; color: #667eea; min-width: 50px;"
             )
@@ -168,51 +172,74 @@ class ConsultationView(QWidget):
             group_layout.addLayout(header)
 
             # Description
-            desc = QLabel(field.get('description', ''))
+            desc = QLabel(field.get("description", ""))
             desc.setStyleSheet("color: #666; font-size: 8pt; font-style: italic;")
             desc.setWordWrap(True)
             group_layout.addWidget(desc)
 
-            # Slider
-            slider = QSlider(Qt.Orientation.Horizontal)
-            min_val = field.get('min', 0)
-            max_val = field.get('max', 10)
-            step = field.get('step', 0.5)
-            default = field.get('default', 5)
+            # Dropdown (ComboBox)
+            combo = QComboBox()
+            combo.setMinimumHeight(42)
+            combo.setCursor(Qt.CursorShape.PointingHandCursor)
+            combo.setStyleSheet("""
+                QComboBox {
+                    background-color: #1a1d23;
+                    border: 1px solid #3a3d45;
+                    border-radius: 5px;
+                    padding: 5px 15px;
+                    color: #eee;
+                    font-size: 10pt;
+                }
+                QComboBox::drop-down { border: none; }
+                QComboBox QAbstractItemView {
+                    background-color: #1a1d23;
+                    color: #eee;
+                    selection-background-color: #667eea;
+                    border: 1px solid #3a3d45;
+                }
+            """)
 
-            # Convert to int ticks (multiply by 2 for 0.5 steps)
-            multiplier = int(1 / step)
-            slider.setMinimum(int(min_val * multiplier))
-            slider.setMaximum(int(max_val * multiplier))
-            slider.setValue(int(default * multiplier))
-            slider.setTickPosition(QSlider.TickPosition.TicksBelow)
-            slider.setTickInterval(multiplier)
+            # Find membership functions for this variable
+            var_cfg = input_vars.get(field["name"], {})
+            mfs = var_cfg.get("membership_functions", [])
 
-            # Store metadata
-            slider.multiplier = multiplier
-            slider.field_name = field['name']
+            if not mfs:
+                # Fallback if no MFs (unlikely)
+                combo.addItem("Mặc định", 5.0)
+            else:
+                for mf in mfs:
+                    # Calculate peak/midpoint as representative value
+                    params = mf["params"]
+                    if mf["type"] == "triangular":
+                        rep_val = params[1]
+                    else:  # trapezoidal
+                        rep_val = (params[1] + params[2]) / 2
 
-            # Connect value change
-            slider.valueChanged.connect(
-                lambda val, lbl=value_label, mult=multiplier:
-                lbl.setText(f"{val / mult:.1f}")
+                    label_text = mf.get("label", mf["name"])
+                    combo.addItem(f"🔹 {label_text}", rep_val)
+
+            # Set default selection based on field['default']
+            default_val = field.get("default", 5.0)
+            best_idx = 0
+            min_diff = 999
+            for i in range(combo.count()):
+                diff = abs(combo.itemData(i) - default_val)
+                if diff < min_diff:
+                    min_diff = diff
+                    best_idx = i
+            combo.setCurrentIndex(best_idx)
+
+            # Update value label initially and on change
+            value_label.setText(f"{combo.itemData(best_idx):.1f}")
+            combo.currentIndexChanged.connect(
+                lambda idx, c=combo, lbl=value_label: lbl.setText(f"{c.itemData(idx):.1f}")
             )
 
-            group_layout.addWidget(slider)
-
-            # Range labels
-            range_layout = QHBoxLayout()
-            range_layout.addWidget(QLabel(str(min_val)))
-            range_layout.addStretch()
-            range_layout.addWidget(QLabel(str(max_val)))
-            for lbl in [range_layout.itemAt(i).widget() for i in range(range_layout.count()) if range_layout.itemAt(i).widget()]:
-                if lbl:
-                    lbl.setStyleSheet("color: #555; font-size: 8pt;")
-            group_layout.addLayout(range_layout)
+            group_layout.addWidget(combo)
+            self.input_widgets[field["name"]] = combo
+            self.value_labels[field["name"]] = value_label
 
             self.form_layout_inner.addWidget(group)
-            self.sliders[field['name']] = slider
-            self.value_labels[field['name']] = value_label
 
         self.form_layout_inner.addStretch()
 
@@ -223,8 +250,11 @@ class ConsultationView(QWidget):
 
         # Collect input values
         inputs = {}
-        for name, slider in self.sliders.items():
-            inputs[name] = slider.value() / slider.multiplier
+        for name, widget in self.input_widgets.items():
+            if isinstance(widget, QComboBox):
+                inputs[name] = widget.currentData()
+            elif hasattr(widget, "value"):
+                inputs[name] = widget.value() / getattr(widget, "multiplier", 1)
 
         # Run consultation
         self.run_btn.setEnabled(False)
