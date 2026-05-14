@@ -91,12 +91,13 @@ class UserManagementView(QWidget):
         uid = int(self.table.item(row, 0).text())
         user = self.controller.get_user(uid)
         if user:
-            d = UserDialog(self, user.to_dict(), True)
+            d = UserDialog(self, user, True)
             if d.exec() == QDialog.DialogCode.Accepted:
                 data = d.get_data()
                 try:
                     self.controller.update_user(uid, full_name=data["full_name"],
-                        email=data.get("email"), role=data["role"])
+                        email=data.get("email"), role=data["role"],
+                        password=data.get("password"))
                     self._load_users()
                 except Exception as e:
                     QMessageBox.warning(self, "Lỗi", str(e))
@@ -135,6 +136,7 @@ class UserDialog(QDialog):
         self.username_input = QLineEdit(data.get("username", "") if data else "")
         if edit_mode: self.username_input.setEnabled(False)
         self.password_input = QLineEdit()
+        self.password_input.setPlaceholderText("Để trống nếu không muốn đổi mật khẩu" if edit_mode else "")
         self.password_input.setEchoMode(QLineEdit.EchoMode.Password)
         self.fullname_input = QLineEdit(data.get("full_name", "") if data else "")
         self.email_input = QLineEdit(data.get("email", "") if data else "")
@@ -146,7 +148,7 @@ class UserDialog(QDialog):
                 if self.role_input.itemData(i) == data["role"]:
                     self.role_input.setCurrentIndex(i); break
         layout.addRow("Tên đăng nhập:", self.username_input)
-        if not edit_mode: layout.addRow("Mật khẩu:", self.password_input)
+        layout.addRow("Mật khẩu mới:" if edit_mode else "Mật khẩu:", self.password_input)
         layout.addRow("Họ tên:", self.fullname_input)
         layout.addRow("Email:", self.email_input)
         layout.addRow("Vai trò:", self.role_input)
@@ -159,5 +161,6 @@ class UserDialog(QDialog):
     def get_data(self):
         d = {"username": self.username_input.text(), "full_name": self.fullname_input.text(),
              "email": self.email_input.text() or None, "role": self.role_input.currentData()}
-        if not self.edit_mode: d["password"] = self.password_input.text()
+        if self.password_input.text().strip():
+            d["password"] = self.password_input.text().strip()
         return d

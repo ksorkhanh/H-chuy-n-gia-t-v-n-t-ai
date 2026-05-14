@@ -111,32 +111,21 @@ class MainWindow(QMainWindow):
         user_layout = QVBoxLayout(user_frame)
         user_layout.setContentsMargins(15, 10, 15, 10)
 
-        role_names = {
-            "admin": "Quản trị viên",
-            "staff": "Nhân viên",
-            "expert": "Chuyên gia",
-            "guest": "Khách"
-        }
-
-        user_info = QLabel(
-            f"{self.user_data['full_name']}\n"
-            f"{role_names.get(self.user_data['role'], self.user_data['role'])}"
-        )
-        user_info.setObjectName("user_info_label")
-        user_layout.addWidget(user_info)
-
-        logout_btn = QPushButton("Đăng Xuất")
-        logout_btn.setStyleSheet("""
+        # Nút Đăng xuất
+        btn_logout = QPushButton(" Đăng Xuất")
+        btn_logout.setObjectName("btn_logout")
+        btn_logout.setCursor(Qt.CursorShape.PointingHandCursor)
+        btn_logout.setStyleSheet("""
             QPushButton {
                 background-color: transparent; color: #e74c3c;
                 border: 1px solid #e74c3c; border-radius: 8px;
                 padding: 8px; margin: 5px 10px;
+                font-weight: bold;
             }
             QPushButton:hover { background-color: #e74c3c; color: white; }
         """)
-        logout_btn.setCursor(Qt.CursorShape.PointingHandCursor)
-        logout_btn.clicked.connect(self._on_logout)
-        user_layout.addWidget(logout_btn)
+        btn_logout.clicked.connect(self._on_logout)
+        user_layout.addWidget(btn_logout)
 
         sidebar_layout.addWidget(user_frame)
         main_layout.addWidget(sidebar)

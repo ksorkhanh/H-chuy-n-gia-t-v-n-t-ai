@@ -99,7 +99,7 @@ class User:
             raise
 
     @staticmethod
-    def update(user_id, full_name=None, email=None, role=None, is_active=None):
+    def update(user_id, full_name=None, email=None, role=None, is_active=None, password=None):
         """Cập nhật thông tin người dùng."""
         db = DatabaseManager()
         updates = []
@@ -116,6 +116,12 @@ class User:
         if is_active is not None:
             updates.append("is_active = ?")
             params.append(1 if is_active else 0)
+        if password is not None:
+            password_hash, salt = AuthService.hash_password(password)
+            updates.append("password_hash = ?")
+            params.append(password_hash)
+            updates.append("salt = ?")
+            params.append(salt)
         if not updates:
             return
         updates.append("updated_at = CURRENT_TIMESTAMP")
