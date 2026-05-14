@@ -25,7 +25,7 @@ class ViolationModule(BaseModule):
         return self._config.get("description", "")
 
     def get_icon(self):
-        return self._config.get("icon", "⚖️")
+        return self._config.get("icon", "")
 
     def get_config(self):
         return self._config
@@ -38,7 +38,7 @@ class ViolationModule(BaseModule):
         if score >= 70:
             return {
                 "level": "heavy",
-                "title": "🔴 MỨC PHẠT NẶNG",
+                "title": "MỨC PHẠT NẶNG",
                 "color": "#e74c3c",
                 "description": (
                     f"Điểm đánh giá: {score:.1f}/100\n\n"

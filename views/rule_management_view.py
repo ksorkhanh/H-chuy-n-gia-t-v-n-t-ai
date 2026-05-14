@@ -25,7 +25,7 @@ class RuleManagementView(QWidget):
         layout.setSpacing(15)
         layout.setContentsMargins(30, 20, 30, 20)
 
-        title = QLabel("⚙️  Quản Lý Luật Suy Diễn (Rules)")
+        title = QLabel("Quản Lý Luật Suy Diễn (Rules)")
         title.setObjectName("page_title")
         layout.addWidget(title)
 
@@ -35,10 +35,10 @@ class RuleManagementView(QWidget):
         self.module_filter = QComboBox()
         self.module_filter.setMinimumWidth(200)
         self.module_filter.setMinimumHeight(38)
-        self.module_filter.addItem("📋 Tất cả module", "")
-        self.module_filter.addItem("🔄 Chuyển nhượng", "transfer")
-        self.module_filter.addItem("💰 Bồi thường", "compensation")
-        self.module_filter.addItem("⚖️ Vi phạm", "violation")
+        self.module_filter.addItem("Tất cả module", "")
+        self.module_filter.addItem("Chuyển nhượng", "transfer")
+        self.module_filter.addItem("Bồi thường", "compensation")
+        self.module_filter.addItem("Vi phạm", "violation")
         self.module_filter.currentIndexChanged.connect(self._load_rules)
         toolbar.addWidget(self.module_filter)
 
@@ -58,7 +58,7 @@ class RuleManagementView(QWidget):
         btn_export.clicked.connect(self._export_rules)
         toolbar.addWidget(btn_export)
 
-        btn_refresh = QPushButton("🔄")
+        btn_refresh = QPushButton("")
         btn_refresh.clicked.connect(self._load_rules)
         toolbar.addWidget(btn_refresh)
 
@@ -84,7 +84,7 @@ class RuleManagementView(QWidget):
         btn_toggle = QPushButton("🔀 Bật/Tắt")
         btn_toggle.setProperty("class", "btn_warning")
         btn_toggle.clicked.connect(self._toggle_rule)
-        btn_delete = QPushButton("🗑️ Xóa")
+        btn_delete = QPushButton("️ Xóa")
         btn_delete.setProperty("class", "btn_danger")
         btn_delete.clicked.connect(self._delete_rule)
 
@@ -115,7 +115,7 @@ class RuleManagementView(QWidget):
             self.table.setItem(i, 6, QTableWidgetItem(
                 str(rule.get("legal_article_id") or "—")))
 
-            status = "✅ Bật" if rule["is_active"] else "❌ Tắt"
+            status = "Bật" if rule["is_active"] else "Tắt"
             item = QTableWidgetItem(status)
             if not rule["is_active"]:
                 item.setForeground(Qt.GlobalColor.gray)

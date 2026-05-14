@@ -98,6 +98,14 @@ class Case:
         db.execute("DELETE FROM cases WHERE id = ?", (case_id,))
 
     @staticmethod
+    def delete_all(user_id=None):
+        db = DatabaseManager()
+        if user_id:
+            db.execute("DELETE FROM cases WHERE user_id = ?", (user_id,))
+        else:
+            db.execute("DELETE FROM cases")
+
+    @staticmethod
     def get_statistics():
         """Get consultation statistics."""
         db = DatabaseManager()

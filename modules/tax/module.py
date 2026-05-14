@@ -27,7 +27,7 @@ class TaxModule(BaseModule):
         return self._config.get("description", "Tư vấn thuế")
 
     def get_icon(self):
-        return self._config.get("icon", "💲")
+        return self._config.get("icon", "")
 
     def get_config(self):
         return self._config
@@ -40,7 +40,7 @@ class TaxModule(BaseModule):
         if score < 40:
             return {
                 "level": "low",
-                "title": "✅ THUẾ SUẤT ƯU ĐÃI / MIỄN GIẢM",
+                "title": "THUẾ SUẤT ƯU ĐÃI / MIỄN GIẢM",
                 "color": "#27ae60",
                 "description": f"Dự báo nghĩa vụ tài chính ở mức RẤT THẤP ({score:.1f}/100). Có khả năng thuộc diện được hưởng chính sách ưu đãi của Nhà nước.",
                 "recommendations": [
@@ -53,7 +53,7 @@ class TaxModule(BaseModule):
         elif score < 70:
             return {
                 "level": "medium",
-                "title": "⚠️ THUẾ SUẤT TIÊU CHUẨN",
+                "title": "THUẾ SUẤT TIÊU CHUẨN",
                 "color": "#f39c12",
                 "description": f"Dự báo nghĩa vụ tài chính ở mức TRUNG BÌNH ({score:.1f}/100). Đất sẽ chịu mức thuế/phí theo khung giá thông thường của địa phương.",
                 "recommendations": [
@@ -67,7 +67,7 @@ class TaxModule(BaseModule):
         else:
             return {
                 "level": "heavy",
-                "title": "🔴 THUẾ SUẤT CAO",
+                "title": "THUẾ SUẤT CAO",
                 "color": "#e74c3c",
                 "description": f"Dự báo nghĩa vụ tài chính ở mức CAO ({score:.1f}/100). Tài sản thuộc nhóm bị áp dụng biểu thuế suất lớn hoặc có hệ số điều chỉnh K cao.",
                 "recommendations": [

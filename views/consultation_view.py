@@ -30,7 +30,7 @@ class ConsultationView(QWidget):
         header_layout = QHBoxLayout()
         header_layout.setContentsMargins(0, 0, 0, 5)
         
-        title = QLabel("🔍  Tư Vấn Pháp Lý")
+        title = QLabel("Tư Vấn Pháp Lý")
         title.setObjectName("page_title")
         header_layout.addWidget(title)
         
@@ -55,7 +55,7 @@ class ConsultationView(QWidget):
         form_layout = QVBoxLayout(form_container)
         form_layout.setContentsMargins(0, 0, 10, 0)
 
-        form_title = QLabel("📝 Nhập Dữ Liệu")
+        form_title = QLabel("Nhập Dữ Liệu")
         form_title.setProperty("class", "section_title")
         form_layout.addWidget(form_title)
 
@@ -71,7 +71,7 @@ class ConsultationView(QWidget):
         form_layout.addWidget(scroll)
 
         # Run button
-        self.run_btn = QPushButton("🚀  Chạy Phân Tích")
+        self.run_btn = QPushButton("Chạy Phân Tích")
         self.run_btn.setProperty("class", "btn_primary")
         self.run_btn.setMinimumHeight(48)
         self.run_btn.setCursor(Qt.CursorShape.PointingHandCursor)
@@ -85,7 +85,7 @@ class ConsultationView(QWidget):
         result_layout = QVBoxLayout(result_container)
         result_layout.setContentsMargins(10, 0, 0, 0)
 
-        result_title = QLabel("📊 Kết Quả Tư Vấn")
+        result_title = QLabel("Kết Quả Tư Vấn")
         result_title.setProperty("class", "section_title")
         result_layout.addWidget(result_title)
 
@@ -98,7 +98,7 @@ class ConsultationView(QWidget):
 
         # Placeholder
         self.placeholder = QLabel(
-            "⬅️ Chọn module, nhập dữ liệu và nhấn 'Chạy Phân Tích'\nđể xem kết quả tư vấn."
+            "Chọn module, nhập dữ liệu và nhấn 'Chạy Phân Tích'\nđể xem kết quả tư vấn."
         )
         self.placeholder.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.placeholder.setStyleSheet("color: #666; font-size: 11pt; padding: 40px;")
@@ -159,7 +159,7 @@ class ConsultationView(QWidget):
 
             # Field label and value
             header = QHBoxLayout()
-            label = QLabel(f"📌 {field['label']}")
+            label = QLabel(f"{field['label']}")
             label.setStyleSheet("font-weight: bold; font-size: 10pt; color: #fff;")
             header.addWidget(label)
 
@@ -258,12 +258,12 @@ class ConsultationView(QWidget):
 
         # Run consultation
         self.run_btn.setEnabled(False)
-        self.run_btn.setText("⏳  Đang phân tích...")
+        self.run_btn.setText("Đang phân tích...")
 
         result = self.controller.run_consultation(self.current_module, inputs)
 
         self.run_btn.setEnabled(True)
-        self.run_btn.setText("🚀  Chạy Phân Tích")
+        self.run_btn.setText("Chạy Phân Tích")
 
         if "error" in result:
             self._show_error(result["error"])
@@ -316,7 +316,7 @@ class ConsultationView(QWidget):
                      border-radius: 8px; padding: 12px; }
         """)
         desc_layout = QVBoxLayout(desc_card)
-        desc_title = QLabel("📋 Nhận Xét")
+        desc_title = QLabel("Nhận Xét")
         desc_title.setStyleSheet("font-size: 12pt; font-weight: bold; color: #fff;")
         desc_layout.addWidget(desc_title)
 
@@ -335,7 +335,7 @@ class ConsultationView(QWidget):
                          border-radius: 8px; padding: 12px; }
             """)
             rec_layout = QVBoxLayout(rec_card)
-            rec_title = QLabel("💡 Khuyến Nghị")
+            rec_title = QLabel("Khuyến Nghị")
             rec_title.setStyleSheet("font-size: 12pt; font-weight: bold; color: #fff;")
             rec_layout.addWidget(rec_title)
 
@@ -355,7 +355,7 @@ class ConsultationView(QWidget):
                          border-radius: 8px; padding: 12px; }
             """)
             law_layout = QVBoxLayout(law_card)
-            law_title = QLabel("📜 Căn Cứ Pháp Lý")
+            law_title = QLabel("Căn Cứ Pháp Lý")
             law_title.setStyleSheet("font-size: 12pt; font-weight: bold; color: #fff;")
             law_layout.addWidget(law_title)
 
@@ -367,7 +367,7 @@ class ConsultationView(QWidget):
                 """)
                 cite_layout = QVBoxLayout(cite_frame)
 
-                cite_header = QLabel(f"📌 {cite['formatted']}")
+                cite_header = QLabel(f"{cite['formatted']}")
                 cite_header.setStyleSheet("font-weight: bold; color: #667eea;")
                 cite_layout.addWidget(cite_header)
 
@@ -388,7 +388,7 @@ class ConsultationView(QWidget):
                          border-radius: 8px; padding: 12px; }
             """)
             rules_layout = QVBoxLayout(rules_card)
-            rules_title = QLabel(f"⚙️ Luật Kích Hoạt ({len(matched)})")
+            rules_title = QLabel(f"Luật Kích Hoạt ({len(matched)})")
             rules_title.setStyleSheet("font-size: 12pt; font-weight: bold; color: #fff;")
             rules_layout.addWidget(rules_title)
 
@@ -450,7 +450,7 @@ class ConsultationView(QWidget):
                     if res.get("legal_citations"):
                         f.write("-" * 20 + " CĂN CỨ PHÁP LÝ " + "-" * 20 + "\n")
                         for cite in res["legal_citations"]:
-                            f.write(f"📌 {cite['formatted']}\n")
+                            f.write(f"{cite['formatted']}\n")
                             f.write(f"   Nội dung: {cite['content'][:200]}...\n\n")
                             
                     f.write("\n" + "="*60 + "\n")
@@ -469,7 +469,7 @@ class ConsultationView(QWidget):
             if item.widget():
                 item.widget().deleteLater()
 
-        error_label = QLabel(f"❌ {message}")
+        error_label = QLabel(f"{message}")
         error_label.setStyleSheet("color: #e74c3c; font-size: 12pt; padding: 20px;")
         error_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.result_inner.addWidget(error_label)

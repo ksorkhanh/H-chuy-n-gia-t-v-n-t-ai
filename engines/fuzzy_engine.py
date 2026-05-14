@@ -35,23 +35,25 @@ class MembershipFunction:
         """Calculate membership degree for input value x."""
         if self.mf_type == "triangular":
             a, b, c = self.params
-            if x <= a or x >= c:
+            if x < a or x > c:
                 return 0.0
-            elif x <= b:
-                return (x - a) / (b - a) if b != a else 1.0
+            elif x == b:
+                return 1.0
+            elif x < b:
+                return (x - a) / (b - a)
             else:
-                return (c - x) / (c - b) if c != b else 1.0
+                return (c - x) / (c - b)
 
         elif self.mf_type == "trapezoidal":
             a, b, c, d = self.params
-            if x <= a or x >= d:
+            if x < a or x > d:
                 return 0.0
-            elif x <= b:
-                return (x - a) / (b - a) if b != a else 1.0
-            elif x <= c:
+            elif x >= b and x <= c:
                 return 1.0
+            elif x < b:
+                return (x - a) / (b - a)
             else:
-                return (d - x) / (d - c) if d != c else 1.0
+                return (d - x) / (d - c)
         return 0.0
 
 

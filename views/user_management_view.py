@@ -20,7 +20,7 @@ class UserManagementView(QWidget):
         layout.setSpacing(15)
         layout.setContentsMargins(30, 20, 30, 20)
 
-        title = QLabel("👥  Quản Lý Người Dùng")
+        title = QLabel("Quản Lý Người Dùng")
         title.setObjectName("page_title")
         layout.addWidget(title)
 
@@ -31,7 +31,7 @@ class UserManagementView(QWidget):
         btn_add.setCursor(Qt.CursorShape.PointingHandCursor)
         btn_add.clicked.connect(self._add_user)
         toolbar.addWidget(btn_add)
-        btn_refresh = QPushButton("🔄 Làm Mới")
+        btn_refresh = QPushButton("Làm Mới")
         btn_refresh.clicked.connect(self._load_users)
         toolbar.addWidget(btn_refresh)
         layout.addLayout(toolbar)
@@ -47,10 +47,10 @@ class UserManagementView(QWidget):
         actions = QHBoxLayout()
         btn_edit = QPushButton("✏️ Sửa")
         btn_edit.clicked.connect(self._edit_user)
-        btn_reset = QPushButton("🔑 Reset MK")
+        btn_reset = QPushButton("Reset MK")
         btn_reset.setProperty("class", "btn_warning")
         btn_reset.clicked.connect(self._reset_password)
-        btn_del = QPushButton("🗑️ Xóa")
+        btn_del = QPushButton("️ Xóa")
         btn_del.setProperty("class", "btn_danger")
         btn_del.clicked.connect(self._delete_user)
         actions.addStretch()
@@ -73,7 +73,7 @@ class UserManagementView(QWidget):
             self.table.setItem(i, 2, QTableWidgetItem(u["full_name"]))
             self.table.setItem(i, 3, QTableWidgetItem(u.get("email") or ""))
             self.table.setItem(i, 4, QTableWidgetItem(role_map.get(u["role"], u["role"])))
-            self.table.setItem(i, 5, QTableWidgetItem("✅" if u["is_active"] else "❌"))
+            self.table.setItem(i, 5, QTableWidgetItem("" if u["is_active"] else ""))
 
     def _add_user(self):
         d = UserDialog(self)

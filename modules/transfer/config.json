@@ -2,7 +2,7 @@
   "module": "transfer",
   "display_name": "Chuyển nhượng quyền sử dụng đất",
   "description": "Đánh giá tính khả thi của việc chuyển nhượng quyền sử dụng đất dựa trên các yếu tố pháp lý, kinh tế và vị trí",
-  "icon": "🔄",
+  "icon": "",
   "domain": "dat_dai",
   "input_variables": [
     {

@@ -25,7 +25,7 @@ class CompensationModule(BaseModule):
         return self._config.get("description", "")
 
     def get_icon(self):
-        return self._config.get("icon", "💰")
+        return self._config.get("icon", "")
 
     def get_config(self):
         return self._config
@@ -38,7 +38,7 @@ class CompensationModule(BaseModule):
         if score >= 70:
             return {
                 "level": "high",
-                "title": "💰 BỒI THƯỜNG MỨC CAO",
+                "title": "BỒI THƯỜNG MỨC CAO",
                 "color": "#27ae60",
                 "description": (
                     f"Điểm đánh giá: {score:.1f}/100\n\n"
@@ -58,7 +58,7 @@ class CompensationModule(BaseModule):
         elif score >= 40:
             return {
                 "level": "medium",
-                "title": "📊 BỒI THƯỜNG MỨC TRUNG BÌNH",
+                "title": "BỒI THƯỜNG MỨC TRUNG BÌNH",
                 "color": "#f39c12",
                 "description": (
                     f"Điểm đánh giá: {score:.1f}/100\n\n"
@@ -76,7 +76,7 @@ class CompensationModule(BaseModule):
         else:
             return {
                 "level": "low",
-                "title": "📉 BỒI THƯỜNG MỨC THẤP",
+                "title": "BỒI THƯỜNG MỨC THẤP",
                 "color": "#e74c3c",
                 "description": (
                     f"Điểm đánh giá: {score:.1f}/100\n\n"

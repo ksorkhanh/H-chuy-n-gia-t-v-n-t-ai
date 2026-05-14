@@ -90,7 +90,7 @@ class DashboardView(QWidget):
         header_layout = QVBoxLayout()
         header_layout.setSpacing(5)
         
-        greeting = f"👋 Xin chào, {self.user['full_name']}!" if self.user else "📊 Dashboard"
+        greeting = f"👋 Xin chào, {self.user['full_name']}!" if self.user else "Dashboard"
         title = QLabel(greeting)
         title.setObjectName("page_title")
         title.setStyleSheet("font-size: 24pt; font-weight: bold; color: #fff;")
@@ -107,11 +107,11 @@ class DashboardView(QWidget):
         stats_layout = QHBoxLayout()
         stats_layout.setSpacing(15)
 
-        self.stat_total = self._create_stat_card("0", "Tổng tư vấn", "📋", "#3182ce")
-        self.stat_transfer = self._create_stat_card("0", "Chuyển nhượng", "🔄", "#38a169")
-        self.stat_compensation = self._create_stat_card("0", "Bồi thường", "💰", "#d69e2e")
-        self.stat_violation = self._create_stat_card("0", "Vi phạm", "⚖️", "#e53e3e")
-        self.stat_tax = self._create_stat_card("0", "Thuế đất", "💲", "#805ad5")
+        self.stat_total = self._create_stat_card("0", "Tổng tư vấn", "", "#3182ce")
+        self.stat_transfer = self._create_stat_card("0", "Chuyển nhượng", "", "#38a169")
+        self.stat_compensation = self._create_stat_card("0", "Bồi thường", "", "#d69e2e")
+        self.stat_violation = self._create_stat_card("0", "Vi phạm", "", "#e53e3e")
+        self.stat_tax = self._create_stat_card("0", "Thuế đất", "", "#805ad5")
 
         stats_layout.addWidget(self.stat_total)
         stats_layout.addWidget(self.stat_transfer)
@@ -129,7 +129,7 @@ class DashboardView(QWidget):
         modules_layout = QVBoxLayout(modules_frame)
         modules_layout.setContentsMargins(0, 0, 0, 0)
         
-        section_label = QLabel("🚀 Chọn Module Tư Vấn")
+        section_label = QLabel("Chọn Module Tư Vấn")
         section_label.setStyleSheet("font-size: 14pt; font-weight: bold; color: #e2e8f0; margin-bottom: 10px;")
         modules_layout.addWidget(section_label)
 
@@ -154,13 +154,13 @@ class DashboardView(QWidget):
             action_label.setStyleSheet("font-size: 14pt; font-weight: bold; color: #e2e8f0; margin-bottom: 10px;")
             actions_layout.addWidget(action_label)
             
-            btn_users = self._create_action_btn("👥 Quản lý người dùng", "#4299e1")
+            btn_users = self._create_action_btn("Quản lý người dùng", "#4299e1")
             btn_users.clicked.connect(lambda: self.action_requested.emit("users"))
             
-            btn_rules = self._create_action_btn("⚙️ Quản lý luật mờ", "#48bb78")
+            btn_rules = self._create_action_btn("Quản lý luật mờ", "#48bb78")
             btn_rules.clicked.connect(lambda: self.action_requested.emit("rules"))
             
-            btn_history = self._create_action_btn("📜 Xem toàn bộ lịch sử", "#ed8936")
+            btn_history = self._create_action_btn("Xem toàn bộ lịch sử", "#ed8936")
             btn_history.clicked.connect(lambda: self.action_requested.emit("history"))
             
             actions_layout.addWidget(btn_users)
@@ -177,7 +177,7 @@ class DashboardView(QWidget):
         bottom_layout.setSpacing(20)
 
         # Left: Chart
-        chart_card = self._create_panel("📈 Thống kê theo nghiệp vụ")
+        chart_card = self._create_panel("Thống kê theo nghiệp vụ")
         chart_layout = QVBoxLayout(chart_card)
         self.bar_chart = BarChart()
         chart_layout.addWidget(self.bar_chart)

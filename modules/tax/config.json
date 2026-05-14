@@ -1,7 +1,7 @@
 {
   "module": "tax",
   "display_name": "Thuế đất đai",
-  "icon": "💲",
+  "icon": "",
   "domain": "dat_dai",
   "description": "Tư vấn và ước tính thuế suất, tiền sử dụng đất, lệ phí trước bạ theo Luật Đất đai 2024.",
   "input_variables": [

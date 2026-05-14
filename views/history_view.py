@@ -22,7 +22,7 @@ class HistoryView(QWidget):
         layout.setSpacing(15)
         layout.setContentsMargins(30, 20, 30, 20)
 
-        title = QLabel("📜  Lịch Sử Tư Vấn")
+        title = QLabel("Lịch Sử Tư Vấn")
         title.setObjectName("page_title")
         layout.addWidget(title)
 
@@ -30,15 +30,15 @@ class HistoryView(QWidget):
         toolbar = QHBoxLayout()
         self.module_filter = QComboBox()
         self.module_filter.setMinimumHeight(38)
-        self.module_filter.addItem("📋 Tất cả", "")
-        self.module_filter.addItem("🔄 Chuyển nhượng", "transfer")
-        self.module_filter.addItem("💰 Bồi thường", "compensation")
-        self.module_filter.addItem("⚖️ Vi phạm", "violation")
+        self.module_filter.addItem("Tất cả", "")
+        self.module_filter.addItem("Chuyển nhượng", "transfer")
+        self.module_filter.addItem("Bồi thường", "compensation")
+        self.module_filter.addItem("Vi phạm", "violation")
         self.module_filter.currentIndexChanged.connect(self._load_history)
         toolbar.addWidget(self.module_filter)
         toolbar.addStretch()
 
-        btn_refresh = QPushButton("🔄 Làm Mới")
+        btn_refresh = QPushButton("Làm Mới")
         btn_refresh.clicked.connect(self._load_history)
         toolbar.addWidget(btn_refresh)
         layout.addLayout(toolbar)
@@ -56,12 +56,55 @@ class HistoryView(QWidget):
 
         # Actions
         actions = QHBoxLayout()
-        btn_view = QPushButton("🔍 Xem Chi Tiết")
+        btn_view = QPushButton("Xem Chi Tiết")
         btn_view.setProperty("class", "btn_primary")
         btn_view.clicked.connect(self._view_detail)
+        
+        btn_delete = QPushButton("Xóa Chọn")
+        btn_delete.setStyleSheet("background-color: #e74c3c; color: white;")
+        btn_delete.clicked.connect(self._delete_selected)
+        
+        btn_delete_all = QPushButton("Xóa Tất Cả")
+        btn_delete_all.setStyleSheet("background-color: #c0392b; color: white;")
+        btn_delete_all.clicked.connect(self._delete_all)
+        
+        actions.addWidget(btn_delete_all)
+        actions.addWidget(btn_delete)
         actions.addStretch()
         actions.addWidget(btn_view)
         layout.addLayout(actions)
+
+    def _delete_selected(self):
+        row = self.table.currentRow()
+        if row < 0:
+            QMessageBox.warning(self, "Cảnh báo", "Vui lòng chọn một lịch sử để xóa.")
+            return
+            
+        case_id = int(self.table.item(row, 0).text())
+        reply = QMessageBox.question(self, 'Xác nhận xóa', 
+                                     f"Bạn có chắc chắn muốn xóa lịch sử #{case_id} không?",
+                                     QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+                                     QMessageBox.StandardButton.No)
+                                     
+        if reply == QMessageBox.StandardButton.Yes:
+            if self.controller.delete_case(case_id):
+                QMessageBox.information(self, "Thành công", "Đã xóa lịch sử.")
+                self._load_history()
+            else:
+                QMessageBox.warning(self, "Lỗi", "Không thể xóa lịch sử này.")
+
+    def _delete_all(self):
+        reply = QMessageBox.question(self, 'Xác nhận xóa tất cả', 
+                                     "Bạn có chắc chắn muốn xóa TẤT CẢ lịch sử tư vấn không?\nHành động này không thể hoàn tác!",
+                                     QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+                                     QMessageBox.StandardButton.No)
+                                     
+        if reply == QMessageBox.StandardButton.Yes:
+            if hasattr(self.controller, 'delete_all_cases') and self.controller.delete_all_cases():
+                QMessageBox.information(self, "Thành công", "Đã xóa tất cả lịch sử.")
+                self._load_history()
+            else:
+                QMessageBox.warning(self, "Lỗi", "Không thể xóa lịch sử.")
 
     def _load_history(self):
         module = self.module_filter.currentData()
@@ -126,16 +169,16 @@ class CaseDetailDialog(QDialog):
         content_layout = QVBoxLayout(content)
 
         # Header
-        header = QLabel(f"📋 Case #{case_data['id']}")
+        header = QLabel(f"Case #{case_data['id']}")
         header.setStyleSheet("font-size: 16pt; font-weight: bold; color: #667eea;")
         content_layout.addWidget(header)
 
         info_text = (
             f"📅 Thời gian: {case_data.get('created_at', '')}\n"
-            f"👤 Người dùng: {case_data.get('user_name', '')}\n"
-            f"📦 Module: {case_data.get('module', '')}\n"
-            f"📊 Điểm: {case_data.get('score', 'N/A')}\n"
-            f"📌 Kết luận: {case_data.get('conclusion', '')}"
+            f"Người dùng: {case_data.get('user_name', '')}\n"
+            f"Module: {case_data.get('module', '')}\n"
+            f"Điểm: {case_data.get('score', 'N/A')}\n"
+            f"Kết luận: {case_data.get('conclusion', '')}"
         )
         info = QLabel(info_text)
         info.setStyleSheet("color: #222; font-size: 10pt; padding: 10px; "
@@ -156,7 +199,7 @@ class CaseDetailDialog(QDialog):
         # Result data
         result_data = case_data.get("result_data", {})
         if result_data:
-            res_title = QLabel("📊 Kết Quả")
+            res_title = QLabel("Kết Quả")
             res_title.setStyleSheet("font-size: 12pt; font-weight: bold; color: #1a1a1a; margin-top: 10px;")
             content_layout.addWidget(res_title)
 

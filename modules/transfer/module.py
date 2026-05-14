@@ -25,7 +25,7 @@ class TransferModule(BaseModule):
         return self._config.get("description", "")
 
     def get_icon(self):
-        return self._config.get("icon", "🔄")
+        return self._config.get("icon", "")
 
     def get_config(self):
         return self._config
@@ -38,7 +38,7 @@ class TransferModule(BaseModule):
         if score >= 70:
             return {
                 "level": "high",
-                "title": "✅ KHẢ THI CAO",
+                "title": "KHẢ THI CAO",
                 "color": "#27ae60",
                 "description": (
                     f"Điểm đánh giá: {score:.1f}/100\n\n"
@@ -56,7 +56,7 @@ class TransferModule(BaseModule):
         elif score >= 40:
             return {
                 "level": "medium",
-                "title": "⚠️ CẦN XEM XÉT THÊM",
+                "title": "CẦN XEM XÉT THÊM",
                 "color": "#f39c12",
                 "description": (
                     f"Điểm đánh giá: {score:.1f}/100\n\n"
@@ -74,7 +74,7 @@ class TransferModule(BaseModule):
         else:
             return {
                 "level": "low",
-                "title": "❌ KHẢ THI THẤP",
+                "title": "KHẢ THI THẤP",
                 "color": "#e74c3c",
                 "description": (
                     f"Điểm đánh giá: {score:.1f}/100\n\n"

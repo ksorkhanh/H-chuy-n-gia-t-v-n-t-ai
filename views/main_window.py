@@ -8,7 +8,6 @@ from PyQt6.QtWidgets import (QMainWindow, QWidget, QHBoxLayout, QVBoxLayout,
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QFont
 
-from views.styles import MAIN_STYLESHEET
 from views.dashboard_view import DashboardView
 from views.consultation_view import ConsultationView
 from views.legal_management_view import LegalManagementView
@@ -46,7 +45,6 @@ class MainWindow(QMainWindow):
             UI_SETTINGS["window_width"],
             UI_SETTINGS["window_height"]
         )
-        self.setStyleSheet(MAIN_STYLESHEET)
 
         self.sidebar_buttons = {}
         self._setup_ui()
@@ -77,7 +75,7 @@ class MainWindow(QMainWindow):
         header_layout = QVBoxLayout(header)
         header_layout.setContentsMargins(20, 20, 20, 15)
 
-        app_title = QLabel("⚖️ Tư Vấn Pháp Lý")
+        app_title = QLabel("Tư Vấn Pháp Lý")
         app_title.setObjectName("sidebar_title")
         header_layout.addWidget(app_title)
 
@@ -90,12 +88,12 @@ class MainWindow(QMainWindow):
 
         # Navigation buttons
         nav_items = [
-            ("dashboard", "📊  Dashboard"),
-            ("consultation", "🔍  Tư Vấn"),
-            ("legal", "📜  Văn Bản Pháp Lý"),
-            ("rules", "⚙️  Quản Lý Rules"),
-            ("users", "👥  Người Dùng"),
-            ("history", "📜  Lịch Sử"),
+            ("dashboard", "TỔNG QUAN"),
+            ("consultation", "TƯ VẤN PHÁP LÝ"),
+            ("legal", "VĂN BẢN PHÁP LÝ"),
+            ("rules", "QUẢN LÝ LUẬT"),
+            ("users", "NGƯỜI DÙNG"),
+            ("history", "LỊCH SỬ TƯ VẤN"),
         ]
 
         for key, label in nav_items:
@@ -121,13 +119,13 @@ class MainWindow(QMainWindow):
         }
 
         user_info = QLabel(
-            f"👤 {self.user_data['full_name']}\n"
-            f"🔑 {role_names.get(self.user_data['role'], self.user_data['role'])}"
+            f"{self.user_data['full_name']}\n"
+            f"{role_names.get(self.user_data['role'], self.user_data['role'])}"
         )
         user_info.setObjectName("user_info_label")
         user_layout.addWidget(user_info)
 
-        logout_btn = QPushButton("🚪  Đăng Xuất")
+        logout_btn = QPushButton("Đăng Xuất")
         logout_btn.setStyleSheet("""
             QPushButton {
                 background-color: transparent; color: #e74c3c;

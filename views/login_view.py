@@ -6,7 +6,6 @@ from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QLabel,
                               QSizePolicy)
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtGui import QFont
-from views.styles import LOGIN_STYLESHEET
 
 
 class LoginView(QWidget):
@@ -18,7 +17,6 @@ class LoginView(QWidget):
     def __init__(self, auth_controller):
         super().__init__()
         self.auth_controller = auth_controller
-        self.setStyleSheet(LOGIN_STYLESHEET)
         self.setObjectName("login_container")
         self._setup_ui()
 
@@ -36,7 +34,7 @@ class LoginView(QWidget):
         card_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         # Icon
-        icon_label = QLabel("⚖️")
+        icon_label = QLabel("")
         icon_label.setObjectName("login_icon")
         icon_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         card_layout.addWidget(icon_label)
@@ -89,7 +87,7 @@ class LoginView(QWidget):
         card_layout.addSpacing(5)
 
         # Login button
-        self.login_btn = QPushButton("🔐  Đăng Nhập")
+        self.login_btn = QPushButton("Đăng Nhập")
         self.login_btn.setObjectName("login_btn")
         self.login_btn.setMinimumHeight(48)
         self.login_btn.setCursor(Qt.CursorShape.PointingHandCursor)
@@ -123,7 +121,7 @@ class LoginView(QWidget):
             self.error_label.setVisible(False)
             self.login_success.emit(user_data)
         else:
-            self.error_label.setText(f"❌ {message}")
+            self.error_label.setText(f"{message}")
             self.error_label.setVisible(True)
 
     def reset(self):

@@ -49,9 +49,31 @@ class HistoryController:
         return [dict(r) for r in rows]
 
     def delete_case(self, case_id):
-        """Delete a case (admin only)."""
-        self.auth.require_permission("manage_users")
-        Case.delete(case_id)
+        """Delete a case. Admins can delete any, users can delete their own."""
+        user = self.auth.get_current_user()
+        if not user:
+            return False
+            
+        case = Case.find_by_id(case_id)
+        if not case:
+            return False
+            
+        if user["role"] == "admin" or case["user_id"] == user["id"]:
+            Case.delete(case_id)
+            return True
+        return False
+
+    def delete_all_cases(self):
+        """Delete all history cases."""
+        user = self.auth.get_current_user()
+        if not user:
+            return False
+            
+        if user["role"] == "admin":
+            Case.delete_all()
+        else:
+            Case.delete_all(user_id=user["id"])
+        return True
 
     def get_statistics(self):
         """Get consultation statistics."""

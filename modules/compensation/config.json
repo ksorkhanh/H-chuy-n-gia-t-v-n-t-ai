@@ -2,7 +2,7 @@
   "module": "compensation",
   "display_name": "Bồi thường khi Nhà nước thu hồi đất",
   "description": "Đánh giá mức bồi thường khi Nhà nước thu hồi đất dựa trên loại đất, thời gian sử dụng, diện tích và các yếu tố liên quan",
-  "icon": "💰",
+  "icon": "",
   "domain": "dat_dai",
   "input_variables": [
     {

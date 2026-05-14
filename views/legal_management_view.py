@@ -23,14 +23,14 @@ class LegalManagementView(QWidget):
         layout.setSpacing(15)
         layout.setContentsMargins(30, 20, 30, 20)
 
-        title = QLabel("📜  Quản Lý Văn Bản Pháp Lý")
+        title = QLabel("Quản Lý Văn Bản Pháp Lý")
         title.setObjectName("page_title")
         layout.addWidget(title)
 
         # Toolbar
         toolbar = QHBoxLayout()
         self.search_input = QLineEdit()
-        self.search_input.setPlaceholderText("🔍 Tìm kiếm văn bản...")
+        self.search_input.setPlaceholderText("Tìm kiếm văn bản...")
         self.search_input.setMinimumHeight(38)
         self.search_input.textChanged.connect(self._on_search)
         toolbar.addWidget(self.search_input)
@@ -41,7 +41,7 @@ class LegalManagementView(QWidget):
         btn_add.clicked.connect(self._add_document)
         toolbar.addWidget(btn_add)
 
-        btn_refresh = QPushButton("🔄 Làm Mới")
+        btn_refresh = QPushButton("Làm Mới")
         btn_refresh.clicked.connect(self._load_documents)
         toolbar.addWidget(btn_refresh)
         layout.addLayout(toolbar)
@@ -71,7 +71,7 @@ class LegalManagementView(QWidget):
         doc_actions = QHBoxLayout()
         btn_edit_doc = QPushButton("✏️ Sửa")
         btn_edit_doc.clicked.connect(self._edit_document)
-        btn_del_doc = QPushButton("🗑️ Xóa")
+        btn_del_doc = QPushButton("️ Xóa")
         btn_del_doc.setProperty("class", "btn_danger")
         btn_del_doc.clicked.connect(self._delete_document)
         doc_actions.addStretch()
@@ -85,7 +85,7 @@ class LegalManagementView(QWidget):
         art_frame = QFrame()
         art_layout = QVBoxLayout(art_frame)
         art_layout.setContentsMargins(0, 0, 0, 0)
-        art_label = QLabel("📋 Điều Khoản")
+        art_label = QLabel("Điều Khoản")
         art_label.setProperty("class", "section_title")
         art_layout.addWidget(art_label)
 
@@ -104,7 +104,7 @@ class LegalManagementView(QWidget):
         btn_add_art.clicked.connect(self._add_article)
         btn_edit_art = QPushButton("✏️ Sửa")
         btn_edit_art.clicked.connect(self._edit_article)
-        btn_del_art = QPushButton("🗑️ Xóa")
+        btn_del_art = QPushButton("️ Xóa")
         btn_del_art.setProperty("class", "btn_danger")
         btn_del_art.clicked.connect(self._delete_article)
         art_actions.addStretch()
@@ -126,7 +126,7 @@ class LegalManagementView(QWidget):
             self.doc_table.setItem(i, 2, QTableWidgetItem(doc["code"]))
             self.doc_table.setItem(i, 3, QTableWidgetItem(str(doc["year"])))
             self.doc_table.setItem(i, 4, QTableWidgetItem(doc["domain"]))
-            status = "✅ Hoạt động" if doc["is_active"] else "❌ Tắt"
+            status = "Hoạt động" if doc["is_active"] else "Tắt"
             self.doc_table.setItem(i, 5, QTableWidgetItem(status))
 
     def _on_doc_selected(self, row, col, prev_row, prev_col):
@@ -157,7 +157,7 @@ class LegalManagementView(QWidget):
             self.doc_table.setItem(i, 2, QTableWidgetItem(doc["code"]))
             self.doc_table.setItem(i, 3, QTableWidgetItem(str(doc["year"])))
             self.doc_table.setItem(i, 4, QTableWidgetItem(doc["domain"]))
-            status = "✅" if doc["is_active"] else "❌"
+            status = "" if doc["is_active"] else ""
             self.doc_table.setItem(i, 5, QTableWidgetItem(status))
 
     def _add_document(self):

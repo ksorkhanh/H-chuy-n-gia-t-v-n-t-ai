@@ -95,6 +95,41 @@ JOB_01/
 └── utils/helpers.py         # Utilities
 ```
 
+## 📖 Hướng Dẫn Sử Dụng Hệ Thống
+
+### 1. Quản Lý Văn Bản Pháp Lý (Dành cho Admin/Chuyên gia)
+Mục này cho phép bạn quản lý các tài liệu, nghị định, bộ luật để làm cơ sở trích dẫn cho kết quả tư vấn.
+- **Thêm Văn Bản Mới**:
+  - Chọn nút **Thêm Văn Bản** ở cột trái.
+  - Điền thông tin: Mã số (vd: `LDD2024`), Tên văn bản (vd: `Luật Đất đai 2024`), Cơ quan ban hành, Ngày có hiệu lực, và Mô tả (hoặc Link tra cứu).
+  - Nhấn **Lưu thay đổi** để cập nhật vào hệ thống.
+- **Quản Lý Điều Luật chi tiết**:
+  - Khi click chọn một Văn bản bên danh sách trái, cột phải sẽ hiển thị các Điều luật thuộc văn bản đó. 
+  - Nhấn **Thêm Điều Luật** để bổ sung chi tiết (vd: Mã điều: `D15`, Tên: `Điều 15`, Nội dung: `Quy định về...`).
+- **Sửa / Xóa**: 
+  - Chọn văn bản/điều luật cần thao tác. Nhấn **Xóa** (nút màu đỏ) để loại bỏ. Để sửa, chỉ cần thay đổi thông tin trên Form và nhấn **Lưu**.
+
+### 2. Quản Lý Luật Suy Diễn (Fuzzy Rules Management)
+Hệ chuyên gia hoạt động dựa trên các quy tắc Logic mờ (Nếu A và B thì C). Bạn có thể toàn quyền tùy chỉnh bộ não của hệ thống tại đây.
+- **Cấu trúc của một Luật (Rule)**:
+  - **Module**: Nghiệp vụ áp dụng (vd: `tax`, `transfer`, `compensation`).
+  - **Mã luật (Rule ID)**: Mã định danh duy nhất (vd: `R001_Tax`).
+  - **Kết luận (Conclusion)**: Tập mờ đầu ra (vd: `high`, `low`, `medium`).
+  - **Trọng số (Weight)**: Độ mạnh/ưu tiên của luật (từ `0.1` đến `1.0`).
+- **Cách viết Điều Kiện (JSON Format)**:
+  - Tập hợp các điều kiện đầu vào (Mệnh đề IF) phải được viết dưới chuẩn **JSON Array**.
+  - Ví dụ: Để thiết lập quy tắc *"NẾU Vị trí là Nông thôn VÀ Diện tích Nhỏ"*, bạn điền vào ô **Điều kiện (JSON)** như sau:
+    ```json
+    [
+      {"variable": "location_type", "term": "rural"},
+      {"variable": "area_size", "term": "small"}
+    ]
+    ```
+    *(Lưu ý: Thuộc tính `variable` và `term` phải khớp chính xác với các biến đã được cấu hình trong file `config.json` của từng Module).*
+- **Thêm / Trạng Thái Luật**:
+  - Nhấn **Thêm Luật** -> Nhập đầy đủ thông tin (JSON hợp lệ) -> **Lưu Luật**.
+  - Nút **Tắt / Bật (Toggle)**: Bạn có thể tạm thời vô hiệu hóa một luật thay vì xóa bỏ nó, hệ thống sẽ bỏ qua luật này khi tư vấn.
+
 ## 🔧 Mở Rộng Module Mới
 
 ### Ví dụ: Thêm module "Thuế đất đai"

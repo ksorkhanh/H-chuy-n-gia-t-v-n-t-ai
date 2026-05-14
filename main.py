@@ -42,6 +42,10 @@ class LegalExpertApp:
         self.app = QApplication(sys.argv)
         self.app.setApplicationName(APP_NAME)
 
+        # Apply global stylesheet
+        from views.styles import GLOBAL_STYLESHEET
+        self.app.setStyleSheet(GLOBAL_STYLESHEET)
+
         # Initialize database
         logger.info("Initializing database...")
         self.db = DatabaseManager()

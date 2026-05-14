@@ -2,7 +2,7 @@
   "module": "violation",
   "display_name": "Vi phạm hành chính đất đai",
   "description": "Đánh giá mức xử phạt vi phạm hành chính trong lĩnh vực đất đai dựa trên mức độ vi phạm, diện tích, tái phạm và thiệt hại",
-  "icon": "⚖️",
+  "icon": "",
   "domain": "dat_dai",
   "input_variables": [
     {
