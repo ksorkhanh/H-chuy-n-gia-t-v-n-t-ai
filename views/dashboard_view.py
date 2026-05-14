@@ -383,9 +383,9 @@ class DashboardView(QWidget):
                     except:
                         time_str = created_at[:16]
                 else:
-                    time_str = "N/A"
+                    time_str = "K/A"
                     
-                user_name = case.get("user_name", "Unknown")
+                user_name = case.get("user_name", "Ẩn danh")
                 module = case.get("module", "")
                 
                 # Format conclusion

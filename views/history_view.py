@@ -113,7 +113,7 @@ class HistoryView(QWidget):
         else:
             cases = self.controller.get_history()
 
-        module_names = {"transfer": "Chuyển nhượng", "compensation": "Bồi thường", "violation": "Vi phạm"}
+        module_names = {"transfer": "Chuyển nhượng", "compensation": "Bồi thường", "violation": "Vi phạm", "tax": "Thuế đất"}
         self.table.setRowCount(len(cases))
         for i, c in enumerate(cases):
             self.table.setItem(i, 0, QTableWidgetItem(str(c["id"])))
@@ -152,7 +152,7 @@ class HistoryView(QWidget):
 class CaseDetailDialog(QDialog):
     def __init__(self, parent, case_data):
         super().__init__(parent)
-        self.setWindowTitle(f"Chi Tiết Case #{case_data['id']}")
+        self.setWindowTitle(f"Chi Tiết Bản Ghi #{case_data['id']}")
         self.setMinimumSize(600, 500)
         self.setStyleSheet("""
             QDialog { background-color: #ffffff; }
@@ -169,7 +169,7 @@ class CaseDetailDialog(QDialog):
         content_layout = QVBoxLayout(content)
 
         # Header
-        header = QLabel(f"Case #{case_data['id']}")
+        header = QLabel(f"Bản Ghi #{case_data['id']}")
         header.setStyleSheet("font-size: 16pt; font-weight: bold; color: #667eea;")
         content_layout.addWidget(header)
 
@@ -177,7 +177,7 @@ class CaseDetailDialog(QDialog):
             f"📅 Thời gian: {case_data.get('created_at', '')}\n"
             f"Người dùng: {case_data.get('user_name', '')}\n"
             f"Module: {case_data.get('module', '')}\n"
-            f"Điểm: {case_data.get('score', 'N/A')}\n"
+            f"Điểm: {case_data.get('score', 'K/A')}\n"
             f"Kết luận: {case_data.get('conclusion', '')}"
         )
         info = QLabel(info_text)

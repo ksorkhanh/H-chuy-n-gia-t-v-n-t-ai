@@ -265,9 +265,12 @@ class DocumentDialog(QDialog):
         self.year_input.setRange(1945, 2030)
         self.year_input.setValue(data.get("year", 2024) if data else 2024)
         self.domain_input = QComboBox()
-        self.domain_input.addItems(["dat_dai", "dan_su", "hinh_su", "lao_dong", "thue"])
+        for label, val in [("Đất đai", "dat_dai"), ("Dân sự", "dan_su"), 
+                          ("Hình sự", "hinh_su"), ("Lao động", "lao_dong"), ("Thuế", "thue")]:
+            self.domain_input.addItem(label, val)
+            
         if data and data.get("domain"):
-            idx = self.domain_input.findText(data["domain"])
+            idx = self.domain_input.findData(data["domain"])
             if idx >= 0: self.domain_input.setCurrentIndex(idx)
         self.desc_input = QTextEdit(data.get("description", "") if data else "")
         self.desc_input.setMaximumHeight(100)
@@ -294,7 +297,7 @@ class DocumentDialog(QDialog):
             "title": self.title_input.text(),
             "code": self.code_input.text(),
             "year": self.year_input.value(),
-            "domain": self.domain_input.currentText(),
+            "domain": self.domain_input.currentData(),
             "description": self.desc_input.toPlainText()
         }
 

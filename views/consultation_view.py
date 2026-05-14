@@ -393,7 +393,7 @@ class ConsultationView(QWidget):
             rules_layout.addWidget(rules_title)
 
             for rule in matched[:10]:
-                rdesc = rule.get('description') or f"Rule #{rule['rule_id']}"
+                rdesc = rule.get('description') or f"Quy tắc #{rule['rule_id']}"
                 rule_label = QLabel(
                     f"  • {rdesc}  "
                     f"[Độ kích hoạt: {rule['firing_strength']:.3f}]"
@@ -438,7 +438,7 @@ class ConsultationView(QWidget):
                     
                     f.write("-" * 20 + " KẾT QUẢ " + "-" * 20 + "\n")
                     f.write(f"ĐIỂM ĐÁNH GIÁ: {res['score']:.1f} / 100\n")
-                    f.write(f"KẾT LUẬN: {interp.get('title', 'N/A')}\n\n")
+                    f.write(f"KẾT LUẬN: {interp.get('title', 'K/A')}\n\n")
                     f.write(f"NHẬN XÉT: {interp.get('description', '')}\n\n")
                     
                     if interp.get("recommendations"):

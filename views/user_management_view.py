@@ -38,7 +38,7 @@ class UserManagementView(QWidget):
 
         self.table = QTableWidget()
         self.table.setColumnCount(6)
-        self.table.setHorizontalHeaderLabels(["ID", "Username", "Họ tên", "Email", "Vai trò", "Trạng thái"])
+        self.table.setHorizontalHeaderLabels(["ID", "Tên đăng nhập", "Họ tên", "Email", "Vai trò", "Trạng thái"])
         self.table.horizontalHeader().setSectionResizeMode(2, QHeaderView.ResizeMode.Stretch)
         self.table.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
         self.table.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
@@ -47,7 +47,7 @@ class UserManagementView(QWidget):
         actions = QHBoxLayout()
         btn_edit = QPushButton("✏️ Sửa")
         btn_edit.clicked.connect(self._edit_user)
-        btn_reset = QPushButton("Reset MK")
+        btn_reset = QPushButton("Đặt lại MK")
         btn_reset.setProperty("class", "btn_warning")
         btn_reset.clicked.connect(self._reset_password)
         btn_del = QPushButton("️ Xóa")
@@ -105,10 +105,10 @@ class UserManagementView(QWidget):
         row = self.table.currentRow()
         if row < 0: return
         uid = int(self.table.item(row, 0).text())
-        if QMessageBox.question(self, "Xác nhận", "Reset mật khẩu về '123456'?") == QMessageBox.StandardButton.Yes:
+        if QMessageBox.question(self, "Xác nhận", "Đặt lại mật khẩu về '123456'?") == QMessageBox.StandardButton.Yes:
             try:
                 self.controller.reset_password(uid)
-                QMessageBox.information(self, "OK", "Đã reset mật khẩu")
+                QMessageBox.information(self, "OK", "Đã đặt lại mật khẩu")
             except Exception as e:
                 QMessageBox.warning(self, "Lỗi", str(e))
 
@@ -145,7 +145,7 @@ class UserDialog(QDialog):
             for i in range(self.role_input.count()):
                 if self.role_input.itemData(i) == data["role"]:
                     self.role_input.setCurrentIndex(i); break
-        layout.addRow("Username:", self.username_input)
+        layout.addRow("Tên đăng nhập:", self.username_input)
         if not edit_mode: layout.addRow("Mật khẩu:", self.password_input)
         layout.addRow("Họ tên:", self.fullname_input)
         layout.addRow("Email:", self.email_input)

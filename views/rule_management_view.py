@@ -8,6 +8,7 @@ from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QLabel,
                               QFileDialog, QCheckBox, QAbstractItemView)
 from PyQt6.QtCore import Qt
 import json
+import os
 
 
 class RuleManagementView(QWidget):
@@ -25,7 +26,7 @@ class RuleManagementView(QWidget):
         layout.setSpacing(15)
         layout.setContentsMargins(30, 20, 30, 20)
 
-        title = QLabel("Quản Lý Luật Suy Diễn (Rules)")
+        title = QLabel("Quản Lý Quy Tắc Suy Diễn")
         title.setObjectName("page_title")
         layout.addWidget(title)
 
@@ -36,6 +37,7 @@ class RuleManagementView(QWidget):
         self.module_filter.setMinimumWidth(200)
         self.module_filter.setMinimumHeight(38)
         self.module_filter.addItem("Tất cả module", "")
+        self.module_filter.addItem("Thuế đất đai", "tax")
         self.module_filter.addItem("Chuyển nhượng", "transfer")
         self.module_filter.addItem("Bồi thường", "compensation")
         self.module_filter.addItem("Vi phạm", "violation")
@@ -44,7 +46,7 @@ class RuleManagementView(QWidget):
 
         toolbar.addStretch()
 
-        btn_add = QPushButton("➕ Thêm Rule")
+        btn_add = QPushButton("➕ Thêm Quy Tắc")
         btn_add.setProperty("class", "btn_primary")
         btn_add.setCursor(Qt.CursorShape.PointingHandCursor)
         btn_add.clicked.connect(self._add_rule)
@@ -96,12 +98,15 @@ class RuleManagementView(QWidget):
 
     def _load_rules(self):
         """Load rules into table."""
+        self.table.setSortingEnabled(False)
         module = self.module_filter.currentData()
         rules = self.rule_ctrl.get_all_rules(module if module else None)
         self.table.setRowCount(len(rules))
 
         for i, rule in enumerate(rules):
-            self.table.setItem(i, 0, QTableWidgetItem(str(rule["id"])))
+            item_id = QTableWidgetItem()
+            item_id.setData(Qt.ItemDataRole.EditRole, rule["id"])
+            self.table.setItem(i, 0, item_id)
             self.table.setItem(i, 1, QTableWidgetItem(rule["module"]))
             self.table.setItem(i, 2, QTableWidgetItem(rule["name"]))
 
@@ -111,7 +116,10 @@ class RuleManagementView(QWidget):
             self.table.setItem(i, 3, QTableWidgetItem(cond_str))
 
             self.table.setItem(i, 4, QTableWidgetItem(rule["conclusion"]))
-            self.table.setItem(i, 5, QTableWidgetItem(f"{rule['weight']:.2f}"))
+            item_weight = QTableWidgetItem()
+            item_weight.setData(Qt.ItemDataRole.EditRole, float(rule["weight"]))
+            self.table.setItem(i, 5, item_weight)
+            
             self.table.setItem(i, 6, QTableWidgetItem(
                 str(rule.get("legal_article_id") or "—")))
 
@@ -120,6 +128,8 @@ class RuleManagementView(QWidget):
             if not rule["is_active"]:
                 item.setForeground(Qt.GlobalColor.gray)
             self.table.setItem(i, 7, item)
+            
+        self.table.setSortingEnabled(True)
 
     def _add_rule(self):
         dialog = RuleDialog(self, self.legal_ctrl)
@@ -128,7 +138,7 @@ class RuleManagementView(QWidget):
             try:
                 self.rule_ctrl.create_rule(**data)
                 self._load_rules()
-                QMessageBox.information(self, "Thành công", "Đã thêm rule mới")
+                QMessageBox.information(self, "Thành công", "Đã thêm quy tắc mới")
             except Exception as e:
                 QMessageBox.warning(self, "Lỗi", str(e))
 
@@ -170,7 +180,7 @@ class RuleManagementView(QWidget):
         if row < 0:
             return
         rule_id = int(self.table.item(row, 0).text())
-        reply = QMessageBox.question(self, "Xác nhận", "Xóa rule này?")
+        reply = QMessageBox.question(self, "Xác nhận", "Xóa quy tắc này?")
         if reply == QMessageBox.StandardButton.Yes:
             try:
                 self.rule_ctrl.delete_rule(rule_id)
@@ -209,16 +219,19 @@ class RuleDialog(QDialog):
 
     def __init__(self, parent=None, legal_ctrl=None, data=None):
         super().__init__(parent)
-        self.setWindowTitle("Thêm/Sửa Rule")
+        self.setWindowTitle("Thêm/Sửa Quy Tắc")
         self.setMinimumWidth(550)
         self.setStyleSheet("QDialog { background-color: #1a1d23; }")
         layout = QFormLayout(self)
         layout.setSpacing(12)
 
         self.module_input = QComboBox()
-        self.module_input.addItems(["transfer", "compensation", "violation"])
+        for label, val in [("Thuế đất đai", "tax"), ("Chuyển nhượng", "transfer"), 
+                          ("Bồi thường", "compensation"), ("Vi phạm", "violation")]:
+            self.module_input.addItem(label, val)
+            
         if data:
-            idx = self.module_input.findText(data.get("module", ""))
+            idx = self.module_input.findData(data.get("module", ""))
             if idx >= 0:
                 self.module_input.setCurrentIndex(idx)
 
@@ -256,9 +269,27 @@ class RuleDialog(QDialog):
 
         self.desc_input = QLineEdit(data.get("description", "") if data else "")
 
+        # Condition Builder UI
+        cond_layout = QVBoxLayout()
+        builder_layout = QHBoxLayout()
+        
+        self.var_combo = QComboBox()
+        self.term_combo = QComboBox()
+        btn_add_cond = QPushButton("➕ Thêm nhanh")
+        btn_add_cond.clicked.connect(self._add_condition_from_builder)
+        
+        builder_layout.addWidget(self.var_combo)
+        builder_layout.addWidget(QLabel("="))
+        builder_layout.addWidget(self.term_combo)
+        builder_layout.addWidget(btn_add_cond)
+        builder_layout.addStretch()
+        
+        cond_layout.addLayout(builder_layout)
+        cond_layout.addWidget(self.conditions_input)
+
         layout.addRow("Module:", self.module_input)
-        layout.addRow("Tên rule:", self.name_input)
-        layout.addRow("Điều kiện (JSON):", self.conditions_input)
+        layout.addRow("Tên quy tắc:", self.name_input)
+        layout.addRow("Điều kiện (JSON):", cond_layout)
 
         hint = QLabel('Ví dụ: [{"variable":"severity","term":"serious"}]')
         hint.setStyleSheet("color: #666; font-size: 8pt;")
@@ -280,6 +311,67 @@ class RuleDialog(QDialog):
         btn_layout.addWidget(btn_cancel)
         layout.addRow(btn_layout)
 
+        # Connect signals for builder
+        self.module_input.currentTextChanged.connect(self._update_condition_builder)
+        self.var_combo.currentIndexChanged.connect(self._update_term_combo)
+        
+        self.current_vars = {}
+        self._update_condition_builder()
+
+    def _update_condition_builder(self):
+        module_name = self.module_input.currentData()
+        config_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "modules", module_name, "config.json")
+        self.var_combo.clear()
+        self.term_combo.clear()
+        self.current_vars = {}
+        
+        if os.path.exists(config_path):
+            try:
+                with open(config_path, 'r', encoding='utf-8') as f:
+                    config = json.load(f)
+                    for var in config.get("input_variables", []):
+                        var_name = var["name"]
+                        terms = [mf["name"] for mf in var.get("membership_functions", [])]
+                        self.current_vars[var_name] = terms
+                        self.var_combo.addItem(var.get("label", var_name), var_name)
+                
+                if self.var_combo.count() > 0:
+                    self._update_term_combo()
+            except Exception:
+                pass
+
+    def _update_term_combo(self):
+        self.term_combo.clear()
+        var_name = self.var_combo.currentData()
+        if var_name and var_name in self.current_vars:
+            for term in self.current_vars[var_name]:
+                self.term_combo.addItem(term)
+
+    def _add_condition_from_builder(self):
+        var_name = self.var_combo.currentData()
+        term = self.term_combo.currentText()
+        if not var_name or not term:
+            return
+            
+        cond_text = self.conditions_input.toPlainText().strip()
+        try:
+            conditions = json.loads(cond_text) if cond_text else []
+            if not isinstance(conditions, list):
+                conditions = []
+        except json.JSONDecodeError:
+            conditions = []
+            
+        found = False
+        for c in conditions:
+            if c.get("variable") == var_name:
+                c["term"] = term
+                found = True
+                break
+        if not found:
+            conditions.append({"variable": var_name, "term": term})
+            
+        self.conditions_input.setPlainText(json.dumps(conditions, ensure_ascii=False, indent=2))
+
     def get_data(self):
         cond_text = self.conditions_input.toPlainText()
         try:
@@ -288,7 +380,7 @@ class RuleDialog(QDialog):
             conditions = []
 
         return {
-            "module": self.module_input.currentText(),
+            "module": self.module_input.currentData(),
             "name": self.name_input.text(),
             "conditions": conditions,
             "conclusion": self.conclusion_input.text(),
