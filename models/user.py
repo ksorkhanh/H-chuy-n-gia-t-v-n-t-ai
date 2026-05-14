@@ -1,5 +1,5 @@
 """
-User Model - CRUD operations for user management.
+Mô hình Người dùng - Các thao tác CRUD quản lý người dùng.
 """
 import logging
 from core.database import DatabaseManager
@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 
 class User:
-    """User model for authentication and user management."""
+    """Mô hình người dùng cho xác thực và quản lý tài khoản."""
 
     def __init__(self, id=None, username=None, role=None, full_name=None, email=None, is_active=True):
         self.id = id
@@ -22,8 +22,8 @@ class User:
     @staticmethod
     def authenticate(username, password):
         """
-        Authenticate user with username and password.
-        Returns User object if successful, None otherwise.
+        Xác thực người dùng bằng tên đăng nhập và mật khẩu.
+        Trả về đối tượng User nếu thành công, None nếu thất bại.
         """
         db = DatabaseManager()
         row = db.fetch_one(
@@ -44,7 +44,7 @@ class User:
 
     @staticmethod
     def find_by_id(user_id):
-        """Find user by ID."""
+        """Tìm người dùng theo ID."""
         db = DatabaseManager()
         row = db.fetch_one("SELECT * FROM users WHERE id = ?", (user_id,))
         if row:
@@ -57,7 +57,7 @@ class User:
 
     @staticmethod
     def find_by_username(username):
-        """Find user by username."""
+        """Tìm người dùng theo tên đăng nhập."""
         db = DatabaseManager()
         row = db.fetch_one("SELECT * FROM users WHERE username = ?", (username,))
         if row:
@@ -70,7 +70,7 @@ class User:
 
     @staticmethod
     def get_all():
-        """Get all users."""
+        """Lấy tất cả người dùng."""
         db = DatabaseManager()
         rows = db.fetch_all("SELECT * FROM users ORDER BY id")
         return [
@@ -83,7 +83,7 @@ class User:
 
     @staticmethod
     def create(username, password, role, full_name, email=None):
-        """Create a new user."""
+        """Tạo mới một người dùng."""
         db = DatabaseManager()
         password_hash, salt = AuthService.hash_password(password)
         try:
@@ -100,7 +100,7 @@ class User:
 
     @staticmethod
     def update(user_id, full_name=None, email=None, role=None, is_active=None):
-        """Update user information."""
+        """Cập nhật thông tin người dùng."""
         db = DatabaseManager()
         updates = []
         params = []
@@ -126,7 +126,7 @@ class User:
 
     @staticmethod
     def change_password(user_id, new_password):
-        """Change user password."""
+        """Đổi mật khẩu người dùng."""
         db = DatabaseManager()
         password_hash, salt = AuthService.hash_password(new_password)
         db.execute(
@@ -137,13 +137,13 @@ class User:
 
     @staticmethod
     def delete(user_id):
-        """Delete a user."""
+        """Xóa một người dùng."""
         db = DatabaseManager()
         db.execute("DELETE FROM users WHERE id = ?", (user_id,))
         logger.info(f"Deleted user ID: {user_id}")
 
     def to_dict(self):
-        """Convert to dictionary."""
+        """Chuyển đổi sang dictionary."""
         return {
             "id": self.id,
             "username": self.username,

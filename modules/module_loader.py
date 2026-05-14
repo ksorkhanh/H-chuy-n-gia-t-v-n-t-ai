@@ -1,6 +1,6 @@
 """
-Module Loader - Dynamically discovers and loads business modules.
-Uses registry pattern for plugin management.
+Bộ nạp Module - Tự động phát hiện và nạp các module nghiệp vụ.
+Sử dụng mẫu Registry để quản lý plugin.
 """
 import os
 import importlib
@@ -13,8 +13,8 @@ logger = logging.getLogger(__name__)
 
 class ModuleLoader:
     """
-    Dynamic module loader and registry.
-    Scans modules/ directory for valid modules implementing BaseModule.
+    Bộ nạp module động và sổ đăng ký.
+    Quét thư mục modules/ để tìm các module hợp lệ kế thừa BaseModule.
     """
     _instance = None
 
@@ -31,7 +31,7 @@ class ModuleLoader:
         self._modules = {}
 
     def discover_modules(self):
-        """Scan and load all modules from the modules directory."""
+        """Quét và nạp tất cả module từ thư mục modules."""
         self._modules = {}
 
         if not os.path.exists(MODULES_DIR):
@@ -45,7 +45,7 @@ class ModuleLoader:
                 if os.path.exists(module_file):
                     try:
                         mod = importlib.import_module(f"modules.{item}.module")
-                        # Find class that inherits BaseModule
+                        # Tìm lớp kế thừa từ BaseModule
                         for attr_name in dir(mod):
                             attr = getattr(mod, attr_name)
                             if (isinstance(attr, type) and issubclass(attr, BaseModule)
@@ -58,19 +58,19 @@ class ModuleLoader:
                         logger.error(f"Error loading module '{item}': {e}")
 
     def get_module(self, name):
-        """Get a specific module by name."""
+        """Lấy một module cụ thể theo tên."""
         return self._modules.get(name)
 
     def get_all_modules(self):
-        """Get all loaded modules."""
+        """Lấy tất cả các module đã nạp."""
         return self._modules
 
     def get_module_names(self):
-        """Get list of module names."""
+        """Lấy danh sách tên các module."""
         return list(self._modules.keys())
 
     def get_module_list(self):
-        """Get list of module info for UI display."""
+        """Lấy danh sách thông tin module để hiển thị trên giao diện."""
         return [
             {
                 "name": m.get_name(),

@@ -1,15 +1,15 @@
 """
-Legal Expert System - Main Entry Point
+Hệ Thống Chuyên Gia Tư Vấn Pháp Lý - Điểm Vào Chính
 Hệ thống chuyên gia tư vấn pháp lý sử dụng Fuzzy Logic
 
-This is the main entry point for the application.
-It initializes the database, loads modules, and starts the PyQt6 GUI.
+Đây là điểm vào chính của ứng dụng.
+Khởi tạo CSDL, nạp các module và khởi động giao diện PyQt6.
 """
 import sys
 import os
 import logging
 
-# Add project root to path
+# Thêm thư mục gốc dự án vào đường dẫn
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from PyQt6.QtWidgets import QApplication
@@ -23,7 +23,7 @@ from controllers.auth_controller import AuthController
 from views.login_view import LoginView
 from views.main_window import MainWindow
 
-# Configure logging
+# Cấu hình logging
 logging.basicConfig(
     level=logging.DEBUG if DEBUG else logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
@@ -33,20 +33,20 @@ logger = logging.getLogger(__name__)
 
 class LegalExpertApp:
     """
-    Main application class.
-    Manages the lifecycle of the application:
-    login -> main window -> logout -> login cycle.
+    Lớp ứng dụng chính.
+    Quản lý vòng đời của ứng dụng:
+    đăng nhập -> cửa sổ chính -> đăng xuất -> đăng nhập.
     """
 
     def __init__(self):
         self.app = QApplication(sys.argv)
         self.app.setApplicationName(APP_NAME)
 
-        # Apply global stylesheet
+        # Áp dụng stylesheet toàn cục
         from views.styles import GLOBAL_STYLESHEET
         self.app.setStyleSheet(GLOBAL_STYLESHEET)
 
-        # Initialize database
+        # Khởi tạo cơ sở dữ liệu
         logger.info("Initializing database...")
         self.db = DatabaseManager()
         is_new = self.db.initialize_database()
@@ -56,24 +56,24 @@ class LegalExpertApp:
         else:
             logger.info("Database already exists.")
 
-        # Discover and load modules
+        # Phát hiện và nạp các module
         logger.info("Loading modules...")
         self.module_loader = ModuleLoader()
         self.module_loader.discover_modules()
         logger.info(f"Loaded {len(self.module_loader.get_module_names())} modules: "
                      f"{self.module_loader.get_module_names()}")
 
-        # Initialize auth controller
+        # Khởi tạo bộ điều khiển xác thực
         self.auth_ctrl = AuthController()
 
-        # Windows
+        # Các cửa sổ
         self.login_view = None
         self.main_window = None
 
     def _fix_seed_passwords(self):
         """
-        Fix seed user passwords to use proper hashing.
-        The seed SQL uses placeholder hashes, so we update them here.
+        Sửa mật khẩu của người dùng mẫu để sử dụng băm đúng.
+        File SQL mẫu dùng mã băm tạm, nên cần cập nhật lại tại đây.
         """
         from models.user import User
         users_to_fix = [
@@ -88,7 +88,7 @@ class LegalExpertApp:
                 logger.info(f"Fixed password for user: {username}")
 
     def show_login(self):
-        """Show the login window."""
+        """Hiển thị cửa sổ đăng nhập."""
         self.login_view = LoginView(self.auth_ctrl)
         self.login_view.login_success.connect(self._on_login_success)
         self.login_view.setMinimumSize(800, 600)
@@ -96,20 +96,20 @@ class LegalExpertApp:
         self.login_view.show()
 
     def _on_login_success(self, user_data):
-        """Handle successful login - show main window."""
+        """Xử lý đăng nhập thành công - hiển thị cửa sổ chính."""
         logger.info(f"Login successful: {user_data['username']} ({user_data['role']})")
 
-        # Hide login
+        # Ẩn cửa sổ đăng nhập
         if self.login_view:
             self.login_view.close()
 
-        # Show main window
+        # Hiển thị cửa sổ chính
         self.main_window = MainWindow(user_data, self.auth_ctrl)
         self.main_window.on_logout_callback = self._on_logout
         self.main_window.showMaximized()
 
     def _on_logout(self):
-        """Handle logout - show login again."""
+        """Xử lý đăng xuất - hiển thị lại màn hình đăng nhập."""
         logger.info("User logged out, showing login screen")
         if self.main_window:
             self.main_window.close()
@@ -117,19 +117,19 @@ class LegalExpertApp:
         self.show_login()
 
     def run(self):
-        """Start the application."""
+        """Khởi động ứng dụng."""
         logger.info(f"Starting {APP_NAME}...")
         self.show_login()
         return self.app.exec()
 
 
 def main():
-    """Application entry point."""
+    """Điểm vào chính của ứng dụng."""
     try:
         app = LegalExpertApp()
         sys.exit(app.run())
     except Exception as e:
-        logger.error(f"Application error: {e}", exc_info=True)
+        logger.error(f"Lỗi ứng dụng: {e}", exc_info=True)
         sys.exit(1)
 
 

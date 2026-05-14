@@ -1,7 +1,7 @@
 """
-Database Manager - Singleton pattern for SQLite connection management.
-Handles connection pooling, schema migration, and transaction support.
-Can be extended to support PostgreSQL in the future.
+Quản lý Cơ sở dữ liệu - Mẫu Singleton quản lý kết nối SQLite.
+Xử lý nhóm kết nối, khởi tạo lược đồ và hỗ trợ transaction.
+Có thể mở rộng để hỗ trợ PostgreSQL trong tương lai.
 """
 import sqlite3
 import os
@@ -13,9 +13,9 @@ logger = logging.getLogger(__name__)
 
 class DatabaseManager:
     """
-    Singleton database manager for SQLite.
-    Manages connections, schema initialization, and provides
-    a clean interface for database operations.
+    Quản lý cơ sở dữ liệu (Singleton) cho SQLite.
+    Quản lý các kết nối, khởi tạo lược đồ và cung cấp 
+    một giao diện gọn gàng cho các thao tác CSDL.
     """
     _instance = None
 
@@ -31,11 +31,11 @@ class DatabaseManager:
         self._initialized = True
         self._connection = None
         self.db_path = DB_SETTINGS["path"]
-        # Ensure data directory exists
+        # Đảm bảo thư mục data tồn tại
         os.makedirs(os.path.dirname(self.db_path), exist_ok=True)
 
     def get_connection(self):
-        """Get or create database connection."""
+        """Lấy hoặc tạo kết nối cơ sở dữ liệu."""
         if self._connection is None:
             self._connection = sqlite3.connect(self.db_path)
             self._connection.row_factory = sqlite3.Row
@@ -44,13 +44,13 @@ class DatabaseManager:
         return self._connection
 
     def close(self):
-        """Close database connection."""
+        """Đóng kết nối cơ sở dữ liệu."""
         if self._connection:
             self._connection.close()
             self._connection = None
 
     def execute(self, query, params=None):
-        """Execute a single query and return cursor."""
+        """Thực thi một câu truy vấn đơn và trả về cursor."""
         conn = self.get_connection()
         try:
             if params:
@@ -65,7 +65,7 @@ class DatabaseManager:
             raise
 
     def execute_many(self, query, params_list):
-        """Execute a query with multiple parameter sets."""
+        """Thực thi một truy vấn với nhiều bộ tham số."""
         conn = self.get_connection()
         try:
             cursor = conn.executemany(query, params_list)
@@ -77,7 +77,7 @@ class DatabaseManager:
             raise
 
     def fetch_one(self, query, params=None):
-        """Execute query and fetch one result."""
+        """Thực thi truy vấn và trả về một kết quả đầu tiên."""
         conn = self.get_connection()
         if params:
             cursor = conn.execute(query, params)
@@ -86,7 +86,7 @@ class DatabaseManager:
         return cursor.fetchone()
 
     def fetch_all(self, query, params=None):
-        """Execute query and fetch all results."""
+        """Thực thi truy vấn và trả về tất cả kết quả."""
         conn = self.get_connection()
         if params:
             cursor = conn.execute(query, params)
@@ -96,12 +96,12 @@ class DatabaseManager:
 
     def initialize_database(self):
         """
-        Initialize database schema and seed data.
-        Only runs if tables don't exist yet.
+        Khởi tạo lược đồ cơ sở dữ liệu và dữ liệu mẫu.
+        Chỉ chạy nếu các bảng chưa tồn tại.
         """
         conn = self.get_connection()
 
-        # Check if database is already initialized
+        # Kiểm tra xem CSDL đã được khởi tạo chưa
         cursor = conn.execute(
             "SELECT name FROM sqlite_master WHERE type='table' AND name='users'"
         )
@@ -109,7 +109,7 @@ class DatabaseManager:
             logger.info("Database already initialized.")
             return False
 
-        # Run schema
+        # Chạy file lược đồ (schema)
         if os.path.exists(SCHEMA_PATH):
             logger.info("Initializing database schema...")
             with open(SCHEMA_PATH, 'r', encoding='utf-8') as f:
@@ -120,7 +120,7 @@ class DatabaseManager:
             logger.error(f"Schema file not found: {SCHEMA_PATH}")
             raise FileNotFoundError(f"Schema file not found: {SCHEMA_PATH}")
 
-        # Run seed data
+        # Chạy dữ liệu mẫu (seed data)
         if os.path.exists(SEED_DATA_PATH):
             logger.info("Loading seed data...")
             with open(SEED_DATA_PATH, 'r', encoding='utf-8') as f:
@@ -133,7 +133,7 @@ class DatabaseManager:
         return True
 
     def reset_database(self):
-        """Reset database by deleting and re-initializing."""
+        """Xóa và khởi tạo lại toàn bộ cơ sở dữ liệu."""
         self.close()
         if os.path.exists(self.db_path):
             os.remove(self.db_path)
@@ -141,7 +141,7 @@ class DatabaseManager:
         self.initialize_database()
 
     def table_exists(self, table_name):
-        """Check if a table exists in the database."""
+        """Kiểm tra xem một bảng có tồn tại trong CSDL hay không."""
         result = self.fetch_one(
             "SELECT name FROM sqlite_master WHERE type='table' AND name=?",
             (table_name,)
@@ -149,16 +149,16 @@ class DatabaseManager:
         return result is not None
 
     def begin_transaction(self):
-        """Begin a transaction."""
+        """Bắt đầu một transaction."""
         conn = self.get_connection()
         conn.execute("BEGIN")
 
     def commit_transaction(self):
-        """Commit current transaction."""
+        """Commit (lưu) transaction hiện tại."""
         conn = self.get_connection()
         conn.commit()
 
     def rollback_transaction(self):
-        """Rollback current transaction."""
+        """Rollback (hủy bỏ) transaction hiện tại."""
         conn = self.get_connection()
         conn.rollback()

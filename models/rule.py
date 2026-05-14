@@ -1,6 +1,6 @@
 """
-Rule Model - CRUD for fuzzy inference rules.
-Supports JSON import/export for extensibility.
+Mô hình Quy tắc - Thao tác CRUD cho các quy tắc suy diễn mờ.
+Hỗ trợ nhập/xuất JSON để mở rộng.
 """
 import json
 import logging
@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 class Rule:
-    """Model for fuzzy inference rules."""
+    """Mô hình cho các quy tắc suy diễn mờ."""
 
     def __init__(self, id=None, module=None, name=None, condition_json=None,
                  conclusion=None, weight=1.0, legal_article_id=None,
@@ -27,7 +27,7 @@ class Rule:
 
     @property
     def conditions(self):
-        """Parse condition JSON to list of dicts."""
+        """Phân tích chuỗi JSON điều kiện thành danh sách dict."""
         if isinstance(self.condition_json, str):
             try:
                 return json.loads(self.condition_json)
@@ -100,7 +100,7 @@ class Rule:
 
     @staticmethod
     def import_from_json(json_data):
-        """Import rules from JSON. Returns (success_count, error_count)."""
+        """Nhập quy tắc từ JSON. Trả về (số_thành_công, số_lỗi)."""
         success, errors = 0, 0
         for rule_data in json_data.get("rules", []):
             try:

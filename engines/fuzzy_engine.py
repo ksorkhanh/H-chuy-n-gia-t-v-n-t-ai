@@ -1,9 +1,9 @@
 """
-Fuzzy Logic Engine - Generic Mamdani fuzzy inference system.
-Domain-independent: all variables, membership functions, and rules
-are loaded from configuration (JSON/dict), not hardcoded.
+Động cơ Logic Mờ - Hệ thống suy diễn mờ Mamdani tổng quát.
+Độc lập với miền ứng dụng: tất cả các biến, hàm liên thuộc và quy tắc
+được nạp từ cấu hình (JSON/dict), không mã hóa cứng.
 
-Process: Fuzzification → Rule Evaluation → Aggregation → Defuzzification (Centroid)
+Quy trình: Mờ hóa → Đánh giá quy tắc → Tổng hợp → Giải mờ (Trọng tâm)
 """
 import numpy as np
 import json
@@ -14,17 +14,17 @@ logger = logging.getLogger(__name__)
 
 class MembershipFunction:
     """
-    Represents a fuzzy membership function.
-    Supports triangular and trapezoidal shapes.
+    Biểu diễn một hàm liên thuộc mờ.
+    Hỗ trợ dạng tam giác và hình thang.
     """
 
     def __init__(self, name, mf_type, params, label=None):
         """
-        Args:
-            name: Term name (e.g., 'low', 'medium', 'high')
-            mf_type: 'triangular' or 'trapezoidal'
-            params: [a, b, c] for triangular, [a, b, c, d] for trapezoidal
-            label: Display label in Vietnamese
+        Tham số:
+            name: Tên tập mờ (ví dụ: 'thấp', 'trung_bình', 'cao')
+            mf_type: 'triangular' hoặc 'trapezoidal'
+            params: [a, b, c] cho tam giác, [a, b, c, d] cho hình thang
+            label: Nhãn hiển thị tiếng Việt
         """
         self.name = name
         self.mf_type = mf_type
@@ -32,7 +32,7 @@ class MembershipFunction:
         self.label = label or name
 
     def evaluate(self, x):
-        """Calculate membership degree for input value x."""
+        """Tính độ liên thuộc cho giá trị đầu vào x."""
         if self.mf_type == "triangular":
             a, b, c = self.params
             if x < a or x > c:
@@ -59,18 +59,18 @@ class MembershipFunction:
 
 class FuzzyVariable:
     """
-    Represents a fuzzy input or output variable.
-    Contains range and membership functions.
+    Biểu diễn một biến mờ (đầu vào hoặc đầu ra).
+    Chứa miền giá trị và các hàm liên thuộc.
     """
 
     def __init__(self, name, var_range, membership_functions, label=None, unit=None):
         """
-        Args:
-            name: Variable identifier
-            var_range: [min, max] universe of discourse
-            membership_functions: list of MembershipFunction objects
-            label: Display label
-            unit: Unit of measurement
+        Tham số:
+            name: Mã định danh biến
+            var_range: [min, max] miền giá trị
+            membership_functions: danh sách các đối tượng MembershipFunction
+            label: Nhãn hiển thị
+            unit: Đơn vị đo
         """
         self.name = name
         self.range = var_range
@@ -80,8 +80,8 @@ class FuzzyVariable:
 
     def fuzzify(self, crisp_value):
         """
-        Convert crisp value to fuzzy membership degrees.
-        Returns dict: {term_name: degree}
+        Chuyển đổi giá trị rõ thành các độ liên thuộc mờ.
+        Trả về dict: {tên_tập_mờ: độ_liên_thuộc}
         """
         result = {}
         for name, mf in self.membership_functions.items():
@@ -89,26 +89,26 @@ class FuzzyVariable:
         return result
 
     def get_mf_names(self):
-        """Get list of membership function names."""
+        """Lấy danh sách tên các hàm liên thuộc."""
         return list(self.membership_functions.keys())
 
 
 class FuzzyRule:
     """
-    Represents a fuzzy IF-THEN rule.
-    Conditions are AND-connected (min operator).
+    Biểu diễn một quy tắc mờ IF-THEN.
+    Các điều kiện được nối bằng AND (toán tử min).
     """
 
     def __init__(self, rule_id, conditions, conclusion, weight=1.0,
                  legal_article_id=None, description=None):
         """
-        Args:
-            rule_id: Unique rule identifier
-            conditions: list of {'variable': name, 'term': term_name}
-            conclusion: output term name
-            weight: rule weight (0-1)
-            legal_article_id: linked legal article
-            description: rule description
+        Tham số:
+            rule_id: Mã định danh quy tắc
+            conditions: danh sách {'variable': tên, 'term': tên_tập}
+            conclusion: tên tập mờ đầu ra
+            weight: trọng số quy tắc (0-1)
+            legal_article_id: điều khoản pháp lý liên kết
+            description: mô tả quy tắc
         """
         self.rule_id = rule_id
         self.conditions = conditions
@@ -120,14 +120,14 @@ class FuzzyRule:
 
 class FuzzyEngine:
     """
-    Generic Mamdani Fuzzy Inference Engine.
-    Completely domain-independent - all configuration loaded externally.
+    Động cơ Suy diễn Mờ Mamdani tổng quát.
+    Hoàn toàn độc lập với miền ứng dụng - tất cả cấu hình được nạp từ bên ngoài.
     """
 
     def __init__(self, resolution=1000):
         """
-        Args:
-            resolution: Number of points for defuzzification
+        Tham số:
+            resolution: Số điểm cho quá trình giải mờ
         """
         self.input_variables = {}   # {name: FuzzyVariable}
         self.output_variable = None  # FuzzyVariable
@@ -136,16 +136,16 @@ class FuzzyEngine:
 
     def load_config(self, config):
         """
-        Load complete fuzzy system configuration from dict.
+        Nạp toàn bộ cấu hình hệ thống mờ từ dict.
 
-        Expected config format:
+        Định dạng cấu hình mong đợi:
         {
             "input_variables": [...],
             "output_variable": {...},
-            "rules": [...]  // optional, can be loaded from DB
+            "rules": [...]  // tuỳ chọn, có thể nạp từ CSDL
         }
         """
-        # Load input variables
+        # Nạp các biến đầu vào
         for var_cfg in config.get("input_variables", []):
             mfs = []
             for mf_cfg in var_cfg.get("membership_functions", []):
@@ -164,7 +164,7 @@ class FuzzyEngine:
             )
             self.input_variables[var.name] = var
 
-        # Load output variable
+        # Nạp biến đầu ra
         out_cfg = config.get("output_variable", {})
         if out_cfg:
             mfs = []
@@ -183,7 +183,7 @@ class FuzzyEngine:
                 unit=out_cfg.get("unit")
             )
 
-        # Load rules if provided in config
+        # Nạp quy tắc nếu có trong cấu hình
         for rule_cfg in config.get("rules", []):
             self.add_rule(FuzzyRule(
                 rule_id=rule_cfg.get("id"),
@@ -195,13 +195,13 @@ class FuzzyEngine:
 
     def load_rules_from_db(self, rule_models):
         """
-        Load rules from Rule model objects (from database).
-        Args:
-            rule_models: list of Rule model instances
+        Nạp quy tắc từ các đối tượng mô hình Rule (từ cơ sở dữ liệu).
+        Tham số:
+            rule_models: danh sách các instance của mô hình Rule
         """
         self.rules = []
         for rm in rule_models:
-            conditions = rm.conditions  # Already parsed from JSON
+            conditions = rm.conditions  # Đã được phân tích từ JSON
             self.rules.append(FuzzyRule(
                 rule_id=rm.id,
                 conditions=conditions,
@@ -212,16 +212,16 @@ class FuzzyEngine:
             ))
 
     def add_rule(self, rule):
-        """Add a single rule to the engine."""
+        """Thêm một quy tắc vào động cơ."""
         self.rules.append(rule)
 
     def fuzzify(self, inputs):
         """
-        Fuzzify all input values.
-        Args:
-            inputs: dict {variable_name: crisp_value}
-        Returns:
-            dict {variable_name: {term: degree}}
+        Mờ hóa tất cả các giá trị đầu vào.
+        Tham số:
+            inputs: dict {tên_biến: giá_trị_rõ}
+        Trả về:
+            dict {tên_biến: {tập_mờ: độ_liên_thuộc}}
         """
         fuzzified = {}
         for var_name, value in inputs.items():
@@ -231,13 +231,13 @@ class FuzzyEngine:
 
     def evaluate_rules(self, fuzzified_inputs):
         """
-        Evaluate all rules using fuzzified inputs.
-        Uses AND (min) operator for conditions.
-        Returns list of (rule, firing_strength) tuples.
+        Đánh giá tất cả quy tắc sử dụng đầu vào đã mờ hóa.
+        Sử dụng toán tử AND (min) cho các điều kiện.
+        Trả về danh sách các bộ (quy_tắc, độ_kích_hoạt).
         """
         results = []
         for rule in self.rules:
-            # Calculate firing strength (AND = min of all conditions)
+            # Tính độ kích hoạt (AND = min của tất cả điều kiện)
             strengths = []
             all_conditions_met = True
 
@@ -261,8 +261,8 @@ class FuzzyEngine:
 
     def aggregate(self, rule_results):
         """
-        Aggregate all rule outputs using MAX operator.
-        Returns the aggregated output membership function as array.
+        Tổng hợp tất cả kết quả quy tắc sử dụng toán tử MAX.
+        Trả về hàm liên thuộc đầu ra tổng hợp dưới dạng mảng.
         """
         if not self.output_variable:
             raise ValueError("Output variable not configured")
@@ -277,21 +277,21 @@ class FuzzyEngine:
                 mf = self.output_variable.membership_functions[conclusion_term]
                 for i, xi in enumerate(x):
                     mf_value = mf.evaluate(xi)
-                    # Clip the MF at firing strength (Mamdani implication)
+                    # Cắt ngọn hàm liên thuộc tại độ kích hoạt (Mamdani)
                     clipped = min(mf_value, strength)
-                    # Aggregate using MAX
+                    # Tổng hợp bằng MAX
                     aggregated[i] = max(aggregated[i], clipped)
 
         return x, aggregated
 
     def defuzzify(self, x, aggregated):
         """
-        Defuzzify using centroid method.
-        Returns crisp output value.
+        Giải mờ bằng phương pháp trọng tâm.
+        Trả về giá trị rõ đầu ra.
         """
         total_area = np.sum(aggregated)
         if total_area == 0:
-            # Return midpoint if no rules fired
+            # Trả về điểm giữa nếu không có quy tắc nào kích hoạt
             return (x[0] + x[-1]) / 2
 
         centroid = np.sum(x * aggregated) / total_area
@@ -299,30 +299,30 @@ class FuzzyEngine:
 
     def run(self, inputs):
         """
-        Run complete fuzzy inference.
-        Args:
-            inputs: dict {variable_name: crisp_value}
-        Returns:
-            dict with score, conclusion, explanation, matched_rules
+        Chạy toàn bộ quy trình suy diễn mờ.
+        Tham số:
+            inputs: dict {tên_biến: giá_trị_rõ}
+        Trả về:
+            dict chứa score, conclusion, explanation, matched_rules
         """
-        # Step 1: Fuzzification
+        # Bước 1: Mờ hóa
         fuzzified = self.fuzzify(inputs)
         logger.debug(f"Fuzzified: {fuzzified}")
 
-        # Step 2: Rule evaluation
+        # Bước 2: Đánh giá quy tắc
         rule_results = self.evaluate_rules(fuzzified)
         logger.debug(f"Rule results: {len(rule_results)} rules fired")
 
-        # Step 3: Aggregation
+        # Bước 3: Tổng hợp
         x, aggregated = self.aggregate(rule_results)
 
-        # Step 4: Defuzzification
+        # Bước 4: Giải mờ
         score = self.defuzzify(x, aggregated)
 
-        # Determine conclusion based on output MFs
+        # Xác định kết luận dựa trên hàm liên thuộc đầu ra
         conclusion = self._determine_conclusion(score)
 
-        # Build explanation
+        # Xây dựng giải thích
         matched_rules_info = []
         for rule, strength in rule_results:
             matched_rules_info.append({
@@ -333,7 +333,7 @@ class FuzzyEngine:
                 "legal_article_id": rule.legal_article_id
             })
 
-        # Sort by firing strength descending
+        # Sắp xếp theo độ kích hoạt giảm dần
         matched_rules_info.sort(key=lambda x: x["firing_strength"], reverse=True)
 
         explanation = self._build_explanation(inputs, fuzzified, matched_rules_info, score, conclusion)
@@ -349,7 +349,7 @@ class FuzzyEngine:
         }
 
     def _determine_conclusion(self, score):
-        """Determine which output term best matches the score."""
+        """Xác định tập mờ đầu ra phù hợp nhất với điểm số."""
         if not self.output_variable:
             return "unknown"
 
@@ -364,13 +364,13 @@ class FuzzyEngine:
         return best_term or "unknown"
 
     def _build_explanation(self, inputs, fuzzified, matched_rules, score, conclusion):
-        """Build human-readable explanation."""
+        """Xây dựng giải thích dễ đọc cho người dùng."""
         lines = []
         lines.append("=" * 50)
         lines.append("KẾT QUẢ PHÂN TÍCH FUZZY")
         lines.append("=" * 50)
 
-        # Input summary
+        # Tóm tắt đầu vào
         lines.append("\n📥 DỮ LIỆU ĐẦU VÀO:")
         for var_name, value in inputs.items():
             var = self.input_variables.get(var_name)
@@ -378,7 +378,7 @@ class FuzzyEngine:
             unit = var.unit if var else ""
             lines.append(f"  • {label}: {value} {unit}")
 
-        # Fuzzification results
+        # Kết quả mờ hóa
         lines.append("\n🔄 KẾT QUẢ FUZZIFICATION:")
         for var_name, memberships in fuzzified.items():
             var = self.input_variables.get(var_name)
@@ -388,17 +388,17 @@ class FuzzyEngine:
                 parts = [f"{k}={v:.3f}" for k, v in active.items()]
                 lines.append(f"  • {label}: {', '.join(parts)}")
 
-        # Rules fired
+        # Các quy tắc đã kích hoạt
         lines.append(f"\n📋 SỐ LUẬT KÍCH HOẠT: {len(matched_rules)}")
-        for i, rule in enumerate(matched_rules[:5], 1):  # Top 5 rules
+        for i, rule in enumerate(matched_rules[:5], 1):  # 5 quy tắc hàng đầu
             rule_desc = rule['description'] or f"Rule #{rule['rule_id']}"
             lines.append(f"  {i}. {rule_desc}")
             lines.append(f"     Độ kích hoạt: {rule['firing_strength']:.3f}")
 
-        # Final result
+        # Kết quả cuối cùng
         lines.append(f"\n📊 ĐIỂM ĐÁNH GIÁ: {score:.2f}")
 
-        # Output label
+        # Nhãn đầu ra
         if self.output_variable:
             out_mf = self.output_variable.membership_functions.get(conclusion)
             conclusion_label = out_mf.label if out_mf else conclusion
@@ -408,7 +408,7 @@ class FuzzyEngine:
         return "\n".join(lines)
 
     def get_variable_info(self):
-        """Get information about all variables for UI."""
+        """Lấy thông tin về tất cả các biến cho giao diện."""
         info = {"inputs": [], "output": None}
         for name, var in self.input_variables.items():
             info["inputs"].append({

@@ -1,5 +1,5 @@
 """
-Case Model - Save and retrieve consultation history.
+Mô hình Bản ghi Tư vấn - Lưu và truy xuất lịch sử tư vấn.
 """
 import json
 import logging
@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 
 class Case:
-    """Model for consultation cases and history."""
+    """Mô hình cho các bản ghi tư vấn và lịch sử."""
 
     def __init__(self, id=None, user_id=None, module=None, input_data=None,
                  result_data=None, matched_rules=None, score=None,
@@ -28,7 +28,7 @@ class Case:
     @staticmethod
     def save(user_id, module, input_data, result_data, matched_rules=None,
              score=None, conclusion=None, notes=None):
-        """Save a consultation case."""
+        """Lưu một bản ghi tư vấn."""
         db = DatabaseManager()
         input_str = json.dumps(input_data, ensure_ascii=False)
         result_str = json.dumps(result_data, ensure_ascii=False)
@@ -41,7 +41,7 @@ class Case:
 
     @staticmethod
     def get_by_user(user_id, limit=50):
-        """Get consultation history for a user."""
+        """Lấy lịch sử tư vấn của một người dùng."""
         db = DatabaseManager()
         rows = db.fetch_all(
             """SELECT c.*, u.full_name as user_name
@@ -52,7 +52,7 @@ class Case:
 
     @staticmethod
     def get_all(limit=100):
-        """Get all consultation history."""
+        """Lấy toàn bộ lịch sử tư vấn."""
         db = DatabaseManager()
         rows = db.fetch_all(
             """SELECT c.*, u.full_name as user_name
@@ -62,7 +62,7 @@ class Case:
 
     @staticmethod
     def find_by_id(case_id):
-        """Find case by ID with full details."""
+        """Tìm bản ghi theo ID với đầy đủ chi tiết."""
         db = DatabaseManager()
         row = db.fetch_one(
             """SELECT c.*, u.full_name as user_name
@@ -72,7 +72,7 @@ class Case:
 
     @staticmethod
     def search(module=None, date_from=None, date_to=None, user_id=None):
-        """Search cases with filters."""
+        """Tìm kiếm bản ghi theo các bộ lọc."""
         db = DatabaseManager()
         query = """SELECT c.*, u.full_name as user_name
                    FROM cases c JOIN users u ON c.user_id = u.id WHERE 1=1"""
@@ -107,7 +107,7 @@ class Case:
 
     @staticmethod
     def get_statistics():
-        """Get consultation statistics."""
+        """Lấy thống kê tư vấn."""
         db = DatabaseManager()
         total = db.fetch_one("SELECT COUNT(*) as count FROM cases")
         by_module = db.fetch_all(

@@ -1,6 +1,6 @@
 """
-Consultation View - Dynamic form and result display for consultation.
-Builds UI dynamically from module config.
+Giao diện Tư vấn - Form động và hiển thị kết quả tư vấn.
+Xây dựng giao diện động từ cấu hình module.
 """
 from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QLabel,
                               QPushButton, QFrame, QScrollArea, QSlider,
@@ -11,7 +11,7 @@ import json
 
 
 class ConsultationView(QWidget):
-    """Consultation view with module selection, input form, and result display."""
+    """Giao diện tư vấn với chọn module, form nhập liệu và hiển thị kết quả."""
 
     def __init__(self, consultation_controller):
         super().__init__()
@@ -118,7 +118,7 @@ class ConsultationView(QWidget):
             self._on_module_changed(0)
 
     def _populate_modules(self):
-        """Populate module combo box."""
+        """Nạp các module vào combo box."""
         modules = self.controller.get_available_modules()
         for mod in modules:
             self.module_combo.addItem(
@@ -126,7 +126,7 @@ class ConsultationView(QWidget):
             )
 
     def _on_module_changed(self, index):
-        """Handle module selection change."""
+        """Xử lý khi thay đổi lựa chọn module."""
         if index < 0:
             return
         module_name = self.module_combo.currentData()
@@ -134,8 +134,8 @@ class ConsultationView(QWidget):
         self._build_form(module_name)
 
     def _build_form(self, module_name):
-        """Build dynamic input form using dropdowns from module config."""
-        # Clear existing form
+        """Xây dựng form nhập liệu động sử dụng dropdown từ cấu hình module."""
+        # Xóa form hiện tại
         self.input_widgets = {}
         self.value_labels = {}
         while self.form_layout_inner.count():
@@ -143,7 +143,7 @@ class ConsultationView(QWidget):
             if item.widget():
                 item.widget().deleteLater()
 
-        # Get full config for membership functions
+        # Lấy cấu hình đầy đủ cho các hàm liên thuộc
         config = self.controller.get_module_config(module_name)
         input_vars = {v["name"]: v for v in config.get("input_variables", [])}
         fields = self.controller.get_input_fields(module_name)
@@ -199,16 +199,16 @@ class ConsultationView(QWidget):
                 }
             """)
 
-            # Find membership functions for this variable
+            # Tìm hàm liên thuộc cho biến này
             var_cfg = input_vars.get(field["name"], {})
             mfs = var_cfg.get("membership_functions", [])
 
             if not mfs:
-                # Fallback if no MFs (unlikely)
+                # Dự phòng nếu không có hàm liên thuộc
                 combo.addItem("Mặc định", 5.0)
             else:
                 for mf in mfs:
-                    # Calculate peak/midpoint as representative value
+                    # Tính giá trị đại diện (đỉnh/điểm giữa)
                     params = mf["params"]
                     if mf["type"] == "triangular":
                         rep_val = params[1]
@@ -218,7 +218,7 @@ class ConsultationView(QWidget):
                     label_text = mf.get("label", mf["name"])
                     combo.addItem(f"🔹 {label_text}", rep_val)
 
-            # Set default selection based on field['default']
+            # Đặt lựa chọn mặc định theo giá trị default
             default_val = field.get("default", 5.0)
             best_idx = 0
             min_diff = 999
@@ -229,7 +229,7 @@ class ConsultationView(QWidget):
                     best_idx = i
             combo.setCurrentIndex(best_idx)
 
-            # Update value label initially and on change
+            # Cập nhật nhãn giá trị ban đầu và khi thay đổi
             value_label.setText(f"{combo.itemData(best_idx):.1f}")
             combo.currentIndexChanged.connect(
                 lambda idx, c=combo, lbl=value_label: lbl.setText(f"{c.itemData(idx):.1f}")
@@ -244,11 +244,11 @@ class ConsultationView(QWidget):
         self.form_layout_inner.addStretch()
 
     def _on_run(self):
-        """Run consultation with current inputs."""
+        """Chạy tư vấn với các giá trị nhập hiện tại."""
         if not self.current_module:
             return
 
-        # Collect input values
+        # Thu thập giá trị đầu vào
         inputs = {}
         for name, widget in self.input_widgets.items():
             if isinstance(widget, QComboBox):
@@ -256,7 +256,7 @@ class ConsultationView(QWidget):
             elif hasattr(widget, "value"):
                 inputs[name] = widget.value() / getattr(widget, "multiplier", 1)
 
-        # Run consultation
+        # Chạy tư vấn
         self.run_btn.setEnabled(False)
         self.run_btn.setText("Đang phân tích...")
 
@@ -271,9 +271,9 @@ class ConsultationView(QWidget):
             self._display_result(result)
 
     def _display_result(self, result):
-        """Display consultation result."""
-        self.last_result = result # Store for export
-        # Clear previous results
+        """Hiển thị kết quả tư vấn."""
+        self.last_result = result # Lưu để xuất báo cáo
+        # Xóa kết quả trước đó
         while self.result_inner.count():
             item = self.result_inner.takeAt(0)
             if item.widget():
@@ -413,7 +413,7 @@ class ConsultationView(QWidget):
         self.result_inner.addWidget(export_btn)
 
     def _on_export_report(self):
-        """Export current result to a text file."""
+        """Xuất kết quả hiện tại ra file văn bản."""
         if not hasattr(self, 'last_result'):
             return
             
@@ -463,7 +463,7 @@ class ConsultationView(QWidget):
                 QMessageBox.warning(self, "Lỗi", f"Không thể lưu báo cáo: {str(e)}")
 
     def _show_error(self, message):
-        """Display error message."""
+        """Hiển thị thông báo lỗi."""
         while self.result_inner.count():
             item = self.result_inner.takeAt(0)
             if item.widget():
@@ -476,7 +476,7 @@ class ConsultationView(QWidget):
         self.result_inner.addStretch()
 
     def set_module(self, module_name):
-        """Set the active module from external navigation."""
+        """Thiết lập module đang hoạt động từ điều hướng bên ngoài."""
         for i in range(self.module_combo.count()):
             if self.module_combo.itemData(i) == module_name:
                 self.module_combo.setCurrentIndex(i)

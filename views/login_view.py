@@ -1,5 +1,5 @@
 """
-Login View - Beautiful login screen with gradient background.
+Giao diện Đăng nhập - Màn hình đăng nhập đẹp với nền gradient.
 """
 from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QLabel,
                               QLineEdit, QPushButton, QFrame, QSpacerItem,
@@ -9,9 +9,9 @@ from PyQt6.QtGui import QFont
 
 
 class LoginView(QWidget):
-    """Login screen with modern dark theme."""
+    """Màn hình đăng nhập với giao diện tối hiện đại."""
 
-    # Signal emitted when login is successful
+    # Tín hiệu phát ra khi đăng nhập thành công
     login_success = pyqtSignal(dict)
 
     def __init__(self, auth_controller):
@@ -111,7 +111,7 @@ class LoginView(QWidget):
         main_layout.addWidget(card)
 
     def _on_login(self):
-        """Handle login button click."""
+        """Xử lý khi nhấn nút đăng nhập."""
         username = self.username_input.text().strip()
         password = self.password_input.text().strip()
 
@@ -125,7 +125,7 @@ class LoginView(QWidget):
             self.error_label.setVisible(True)
 
     def reset(self):
-        """Reset form fields."""
+        """Xóa các trường nhập liệu về trạng thái ban đầu."""
         self.username_input.clear()
         self.password_input.clear()
         self.error_label.setVisible(False)

@@ -1,6 +1,6 @@
 """
-Consultation Controller - Orchestrates the consultation process.
-Coordinates between modules, fuzzy engine, legal engine, and case storage.
+Bộ điều khiển Tư vấn - Điều phối quy trình tư vấn.
+Phối hợp giữa các module, động cơ mờ, động cơ pháp lý và lưu trữ bản ghi.
 """
 import logging
 from engines.fuzzy_engine import FuzzyEngine
@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 
 class ConsultationController:
-    """Controller for consultation workflow."""
+    """Bộ điều khiển cho luồng tư vấn."""
 
     def __init__(self):
         self.module_loader = ModuleLoader()
@@ -22,22 +22,22 @@ class ConsultationController:
         self.auth_service = AuthService()
 
     def get_available_modules(self):
-        """Get list of available consultation modules."""
+        """Lấy danh sách các module tư vấn khả dụng."""
         return self.module_loader.get_module_list()
 
     def get_module(self, module_name):
-        """Get a specific module."""
+        """Lấy một module cụ thể."""
         return self.module_loader.get_module(module_name)
 
     def get_input_fields(self, module_name):
-        """Get input field definitions for a module."""
+        """Lấy định nghĩa các trường nhập liệu cho một module."""
         module = self.module_loader.get_module(module_name)
         if module:
             return module.get_input_fields()
         return []
 
     def get_module_config(self, module_name):
-        """Get full configuration for a module."""
+        """Lấy toàn bộ cấu hình cho một module."""
         module = self.module_loader.get_module(module_name)
         if module:
             return module.get_config()
@@ -45,43 +45,43 @@ class ConsultationController:
 
     def run_consultation(self, module_name, inputs):
         """
-        Run a full consultation.
-        Args:
-            module_name: Module identifier
-            inputs: dict of {variable_name: value}
-        Returns:
-            dict with score, conclusion, interpretation, legal_citations, explanation
+        Chạy một phiên tư vấn đầy đủ.
+        Tham số:
+            module_name: Mã định danh module
+            inputs: dict {tên_biến: giá_trị}
+        Trả về:
+            dict chứa score, conclusion, interpretation, legal_citations, explanation
         """
         module = self.module_loader.get_module(module_name)
         if not module:
             return {"error": f"Module không tìm thấy: {module_name}"}
 
         try:
-            # 1. Initialize fuzzy engine with module config
+            # 1. Khởi tạo động cơ mờ với cấu hình module
             fuzzy = FuzzyEngine()
             config = module.get_config()
             fuzzy.load_config(config)
 
-            # 2. Load rules from database
+            # 2. Nạp quy tắc từ cơ sở dữ liệu
             db_rules = Rule.get_by_module(module_name, active_only=True)
             if db_rules:
                 fuzzy.load_rules_from_db(db_rules)
-            # If no DB rules, engine uses config rules (if any)
+            # Nếu không có quy tắc từ DB, engine dùng quy tắc từ config (nếu có)
 
-            # 3. Run fuzzy inference
+            # 3. Chạy suy diễn mờ
             result = fuzzy.run(inputs)
 
-            # 4. Interpret result using module-specific logic
+            # 4. Diễn giải kết quả bằng logic chuyên biệt của module
             interpretation = module.interpret_result(
                 result["score"], result["conclusion"]
             )
 
-            # 5. Get legal citations for matched rules
+            # 5. Lấy trích dẫn pháp lý cho các quy tắc khớp
             legal_citations = self.legal_engine.get_articles_for_rules(
                 result["matched_rules"]
             )
 
-            # 6. Build complete result
+            # 6. Xây dựng kết quả đầy đủ
             full_result = {
                 "module_name": module.get_display_name(),
                 "score": result["score"],
@@ -94,7 +94,7 @@ class ConsultationController:
                 "inputs": inputs
             }
 
-            # 7. Save case to history
+            # 7. Lưu bản ghi vào lịch sử
             user = self.auth_service.get_current_user()
             if user:
                 rule_ids = [r["rule_id"] for r in result["matched_rules"]]

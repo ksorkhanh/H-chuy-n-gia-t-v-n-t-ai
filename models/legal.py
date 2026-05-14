@@ -1,5 +1,5 @@
 """
-Legal Models - CRUD for legal documents, articles, and relations.
+Mô hình Pháp lý - Thao tác CRUD cho văn bản, điều khoản và quan hệ pháp lý.
 """
 import logging
 from core.database import DatabaseManager
@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 
 class LegalDocument:
-    """Model for legal documents (laws, decrees, etc.)."""
+    """Mô hình cho văn bản pháp lý (luật, nghị định, v.v.)."""
 
     def __init__(self, id=None, title=None, code=None, year=None,
                  domain=None, description=None, is_active=True):
@@ -22,7 +22,7 @@ class LegalDocument:
 
     @staticmethod
     def get_all(domain=None):
-        """Get all legal documents, optionally filtered by domain."""
+        """Lấy tất cả văn bản pháp lý, có thể lọc theo lĩnh vực."""
         db = DatabaseManager()
         if domain:
             rows = db.fetch_all(
@@ -35,21 +35,21 @@ class LegalDocument:
 
     @staticmethod
     def find_by_id(doc_id):
-        """Find document by ID."""
+        """Tìm văn bản theo ID."""
         db = DatabaseManager()
         row = db.fetch_one("SELECT * FROM legal_documents WHERE id = ?", (doc_id,))
         return LegalDocument._from_row(row) if row else None
 
     @staticmethod
     def find_by_code(code):
-        """Find document by code."""
+        """Tìm văn bản theo mã."""
         db = DatabaseManager()
         row = db.fetch_one("SELECT * FROM legal_documents WHERE code = ?", (code,))
         return LegalDocument._from_row(row) if row else None
 
     @staticmethod
     def create(title, code, year, domain, description=None):
-        """Create a new legal document."""
+        """Tạo mới một văn bản pháp lý."""
         db = DatabaseManager()
         cursor = db.execute(
             """INSERT INTO legal_documents (title, code, year, domain, description)
@@ -60,7 +60,7 @@ class LegalDocument:
 
     @staticmethod
     def update(doc_id, **kwargs):
-        """Update a legal document."""
+        """Cập nhật một văn bản pháp lý."""
         db = DatabaseManager()
         allowed = ['title', 'code', 'year', 'domain', 'description', 'is_active']
         updates = []
@@ -76,13 +76,13 @@ class LegalDocument:
 
     @staticmethod
     def delete(doc_id):
-        """Delete a legal document and its articles."""
+        """Xóa một văn bản pháp lý và các điều khoản liên quan."""
         db = DatabaseManager()
         db.execute("DELETE FROM legal_documents WHERE id = ?", (doc_id,))
 
     @staticmethod
     def search(keyword):
-        """Search documents by title or code."""
+        """Tìm kiếm văn bản theo tiêu đề hoặc mã."""
         db = DatabaseManager()
         rows = db.fetch_all(
             """SELECT * FROM legal_documents
@@ -112,7 +112,7 @@ class LegalDocument:
 
 
 class LegalArticle:
-    """Model for individual legal articles/clauses."""
+    """Mô hình cho từng điều khoản/khoản mục pháp lý."""
 
     def __init__(self, id=None, document_id=None, article_number=None,
                  clause=None, content=None, keywords=None, is_active=True):
@@ -126,7 +126,7 @@ class LegalArticle:
 
     @staticmethod
     def get_by_document(document_id):
-        """Get all articles for a document."""
+        """Lấy tất cả điều khoản của một văn bản."""
         db = DatabaseManager()
         rows = db.fetch_all(
             "SELECT * FROM legal_articles WHERE document_id = ? ORDER BY article_number",
@@ -136,14 +136,14 @@ class LegalArticle:
 
     @staticmethod
     def find_by_id(article_id):
-        """Find article by ID."""
+        """Tìm điều khoản theo ID."""
         db = DatabaseManager()
         row = db.fetch_one("SELECT * FROM legal_articles WHERE id = ?", (article_id,))
         return LegalArticle._from_row(row) if row else None
 
     @staticmethod
     def get_all():
-        """Get all articles."""
+        """Lấy tất cả điều khoản."""
         db = DatabaseManager()
         rows = db.fetch_all(
             """SELECT la.*, ld.title as document_title, ld.code as document_code
@@ -155,7 +155,7 @@ class LegalArticle:
 
     @staticmethod
     def create(document_id, article_number, content, clause=None, keywords=None):
-        """Create a new article."""
+        """Tạo mới một điều khoản."""
         db = DatabaseManager()
         cursor = db.execute(
             """INSERT INTO legal_articles (document_id, article_number, clause, content, keywords)
@@ -166,7 +166,7 @@ class LegalArticle:
 
     @staticmethod
     def update(article_id, **kwargs):
-        """Update an article."""
+        """Cập nhật một điều khoản."""
         db = DatabaseManager()
         allowed = ['article_number', 'clause', 'content', 'keywords', 'is_active']
         updates = []
@@ -182,13 +182,13 @@ class LegalArticle:
 
     @staticmethod
     def delete(article_id):
-        """Delete an article."""
+        """Xóa một điều khoản."""
         db = DatabaseManager()
         db.execute("DELETE FROM legal_articles WHERE id = ?", (article_id,))
 
     @staticmethod
     def search(keyword, domain=None):
-        """Search articles by keyword in content or keywords field."""
+        """Tìm kiếm điều khoản theo từ khóa trong nội dung."""
         db = DatabaseManager()
         if domain:
             rows = db.fetch_all(
@@ -231,11 +231,11 @@ class LegalArticle:
 
 
 class LegalRelation:
-    """Model for relations between legal articles."""
+    """Mô hình cho quan hệ giữa các điều khoản pháp lý."""
 
     @staticmethod
     def get_related(article_id):
-        """Get all related articles for a given article."""
+        """Lấy tất cả điều khoản liên quan của một điều khoản."""
         db = DatabaseManager()
         rows = db.fetch_all(
             """SELECT lr.*, la.article_number, la.clause, la.content,
@@ -250,7 +250,7 @@ class LegalRelation:
 
     @staticmethod
     def create(source_id, related_id, relation_type):
-        """Create a new relation."""
+        """Tạo mới một quan hệ."""
         db = DatabaseManager()
         cursor = db.execute(
             """INSERT INTO legal_relations (source_article_id, related_article_id, relation_type)
@@ -261,6 +261,6 @@ class LegalRelation:
 
     @staticmethod
     def delete(relation_id):
-        """Delete a relation."""
+        """Xóa một quan hệ."""
         db = DatabaseManager()
         db.execute("DELETE FROM legal_relations WHERE id = ?", (relation_id,))

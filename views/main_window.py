@@ -1,6 +1,6 @@
 """
-Main Window - Primary application window with sidebar navigation.
-Manages view switching and role-based menu visibility.
+Cửa sổ Chính - Cửa sổ ứng dụng chính với thanh điều hướng bên.
+Quản lý chuyển đổi giao diện và hiển thị menu theo vai trò.
 """
 from PyQt6.QtWidgets import (QMainWindow, QWidget, QHBoxLayout, QVBoxLayout,
                               QPushButton, QLabel, QStackedWidget, QFrame,
@@ -26,14 +26,14 @@ from config.settings import UI_SETTINGS
 
 
 class MainWindow(QMainWindow):
-    """Main application window with sidebar and stacked content."""
+    """Cửa sổ ứng dụng chính với thanh bên và vùng nội dung xếp chồng."""
 
     def __init__(self, user_data, auth_controller):
         super().__init__()
         self.user_data = user_data
         self.auth_ctrl = auth_controller
 
-        # Initialize controllers
+        # Khởi tạo các bộ điều khiển
         self.consultation_ctrl = ConsultationController()
         self.legal_ctrl = LegalController()
         self.rule_ctrl = RuleController()
@@ -51,11 +51,11 @@ class MainWindow(QMainWindow):
         self._setup_views()
         self._apply_permissions()
 
-        # Show dashboard by default
+        # Hiển thị tổng quan theo mặc định
         self._switch_view("dashboard")
 
     def _setup_ui(self):
-        """Build main layout: sidebar + content area."""
+        """Xây dựng bố cục chính: thanh bên + vùng nội dung."""
         central = QWidget()
         self.setCentralWidget(central)
         main_layout = QHBoxLayout(central)
@@ -86,7 +86,7 @@ class MainWindow(QMainWindow):
         sidebar_layout.addWidget(header)
         sidebar_layout.addSpacing(10)
 
-        # Navigation buttons
+        # Các nút điều hướng
         nav_items = [
             ("dashboard", "TỔNG QUAN"),
             ("consultation", "TƯ VẤN PHÁP LÝ"),
@@ -106,7 +106,7 @@ class MainWindow(QMainWindow):
 
         sidebar_layout.addStretch()
 
-        # User info at bottom
+        # Thông tin người dùng ở dưới cùng
         user_frame = QFrame()
         user_layout = QVBoxLayout(user_frame)
         user_layout.setContentsMargins(15, 10, 15, 10)
@@ -147,7 +147,7 @@ class MainWindow(QMainWindow):
         main_layout.addWidget(self.content_stack)
 
     def _setup_views(self):
-        """Initialize all views and add to stack."""
+        """Khởi tạo tất cả giao diện và thêm vào ngăn xếp."""
         self.views = {}
 
         # Dashboard
@@ -186,43 +186,43 @@ class MainWindow(QMainWindow):
         self.views["history"] = self.history_view
 
     def _apply_permissions(self):
-        """Show/hide sidebar items based on user role."""
+        """Hiển/ẩn các mục thanh bên dựa trên vai trò người dùng."""
         permissions = self.auth_ctrl.get_user_permissions()
 
-        # Legal management - admin only
+        # Quản lý văn bản - chỉ admin
         if "manage_legal" not in permissions:
             self.sidebar_buttons["legal"].setVisible(False)
 
-        # Rule management - admin & expert
+        # Quản lý quy tắc - admin và chuyên gia
         if "manage_rules" not in permissions:
             self.sidebar_buttons["rules"].setVisible(False)
 
-        # User management - admin only
+        # Quản lý người dùng - chỉ admin
         if "manage_users" not in permissions:
             self.sidebar_buttons["users"].setVisible(False)
 
     def _switch_view(self, view_key):
-        """Switch to a specific view."""
+        """Chuyển sang một giao diện cụ thể."""
         if view_key in self.views:
             self.content_stack.setCurrentWidget(self.views[view_key])
 
-            # Update sidebar button states
+            # Cập nhật trạng thái các nút thanh bên
             for key, btn in self.sidebar_buttons.items():
                 btn.setChecked(key == view_key)
 
-            # Refresh data on view switch
+            # Làm mới dữ liệu khi chuyển giao diện
             if view_key == "dashboard":
                 self.dashboard_view.refresh_stats()
             elif view_key == "history":
                 self.history_view._load_history()
 
     def _open_consultation(self, module_name):
-        """Open consultation view with specific module."""
+        """Mở giao diện tư vấn với module cụ thể."""
         self.consultation_view.set_module(module_name)
         self._switch_view("consultation")
 
     def _on_logout(self):
-        """Handle logout."""
+        """Xử lý đăng xuất."""
         reply = QMessageBox.question(
             self, "Đăng xuất",
             "Bạn có chắc muốn đăng xuất?",
@@ -231,6 +231,6 @@ class MainWindow(QMainWindow):
         if reply == QMessageBox.StandardButton.Yes:
             self.auth_ctrl.logout()
             self.close()
-            # Signal to show login again is handled in main.py
+            # Tín hiệu hiển thị lại đăng nhập được xử lý trong main.py
             if hasattr(self, 'on_logout_callback'):
                 self.on_logout_callback()

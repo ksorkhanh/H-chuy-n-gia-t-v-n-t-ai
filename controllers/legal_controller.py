@@ -1,5 +1,5 @@
 """
-Legal Controller - Manages legal documents and articles.
+Bộ điều khiển Pháp lý - Quản lý văn bản và điều khoản pháp lý.
 """
 import logging
 from models.legal import LegalDocument, LegalArticle, LegalRelation
@@ -9,13 +9,13 @@ logger = logging.getLogger(__name__)
 
 
 class LegalController:
-    """Controller for legal document management."""
+    """Bộ điều khiển cho quản lý văn bản pháp lý."""
 
     def __init__(self):
         self.auth = AuthService()
 
     def get_all_documents(self, domain=None):
-        """Get all legal documents."""
+        """Lấy tất cả văn bản pháp lý."""
         docs = LegalDocument.get_all(domain)
         return [d.to_dict() for d in docs]
 
@@ -39,7 +39,7 @@ class LegalController:
         docs = LegalDocument.search(keyword)
         return [d.to_dict() for d in docs]
 
-    # --- Articles ---
+    # --- Điều khoản ---
     def get_articles_by_document(self, document_id):
         articles = LegalArticle.get_by_document(document_id)
         return [a.to_dict() for a in articles]
@@ -64,7 +64,7 @@ class LegalController:
         rows = LegalArticle.search(keyword, domain)
         return [dict(r) for r in rows]
 
-    # --- Relations ---
+    # --- Quan hệ ---
     def get_related_articles(self, article_id):
         rows = LegalRelation.get_related(article_id)
         return [dict(r) for r in rows]

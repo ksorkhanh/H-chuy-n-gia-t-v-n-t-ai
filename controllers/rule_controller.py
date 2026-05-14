@@ -1,5 +1,5 @@
 """
-Rule Controller - Manages fuzzy inference rules.
+Bộ điều khiển Quy tắc - Quản lý các quy tắc suy diễn mờ.
 """
 import json
 import logging
@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 
 class RuleController:
-    """Controller for rule management."""
+    """Bộ điều khiển cho quản lý quy tắc."""
 
     def __init__(self):
         self.auth = AuthService()
@@ -44,7 +44,7 @@ class RuleController:
         Rule.toggle_active(rule_id)
 
     def import_rules_from_file(self, filepath):
-        """Import rules from JSON file."""
+        """Nhập quy tắc từ file JSON."""
         self.auth.require_permission("import_export")
         json_data = load_json_file(filepath)
         if json_data is None:
@@ -52,7 +52,7 @@ class RuleController:
         return Rule.import_from_json(json_data)
 
     def import_rules_from_json(self, json_str):
-        """Import rules from JSON string."""
+        """Nhập quy tắc từ chuỗi JSON."""
         self.auth.require_permission("import_export")
         try:
             json_data = json.loads(json_str)
@@ -61,5 +61,5 @@ class RuleController:
             return 0, 1
 
     def export_rules(self, module=None):
-        """Export rules to dict."""
+        """Xuất quy tắc ra dict."""
         return Rule.export_to_dict(module)

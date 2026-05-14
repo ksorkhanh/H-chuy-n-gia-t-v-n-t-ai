@@ -1,6 +1,6 @@
 """
-Authentication Service - Handles login, logout, password hashing,
-and permission checking for the Legal Expert System.
+Dịch vụ Xác thực - Xử lý đăng nhập, đăng xuất, băm mật khẩu,
+và kiểm tra quyền cho Hệ Thống Chuyên Gia Tư Vấn Pháp Lý.
 """
 import hashlib
 import os
@@ -13,8 +13,8 @@ logger = logging.getLogger(__name__)
 
 class AuthService:
     """
-    Authentication and authorization service.
-    Manages user sessions and permission checks.
+    Dịch vụ xác thực và phân quyền.
+    Quản lý phiên đăng nhập của người dùng và kiểm tra quyền hạn.
     """
     _instance = None
 
@@ -34,8 +34,8 @@ class AuthService:
     @staticmethod
     def hash_password(password, salt=None):
         """
-        Hash password using SHA-256 with salt.
-        Returns (password_hash, salt) tuple.
+        Băm mật khẩu sử dụng SHA-256 kèm salt.
+        Trả về tuple (password_hash, salt).
         """
         if salt is None:
             salt = os.urandom(32).hex()
@@ -46,7 +46,7 @@ class AuthService:
 
     @staticmethod
     def verify_password(password, password_hash, salt):
-        """Verify password against stored hash and salt."""
+        """Xác minh mật khẩu với mã băm và salt đã lưu."""
         computed_hash = hashlib.sha256(
             (password + salt).encode('utf-8')
         ).hexdigest()
@@ -54,8 +54,8 @@ class AuthService:
 
     def login(self, user_row):
         """
-        Set the current authenticated user.
-        user_row should be a dict-like object with user data.
+        Thiết lập người dùng đang đăng nhập hiện tại.
+        user_row phải là một đối tượng dạng dict chứa dữ liệu người dùng.
         """
         self._current_user = {
             "id": user_row["id"],
@@ -67,16 +67,16 @@ class AuthService:
         logger.info(f"User '{user_row['username']}' logged in with role '{user_row['role']}'")
 
     def logout(self):
-        """Clear current user session."""
+        """Xóa phiên đăng nhập hiện tại."""
         if self._current_user:
             logger.info(f"User '{self._current_user['username']}' logged out")
         self._current_user = None
         self._login_time = None
 
     def get_current_user(self):
-        """Get current authenticated user or None if not logged in."""
+        """Lấy người dùng hiện tại hoặc None nếu chưa đăng nhập."""
         if self._current_user and self._login_time:
-            # Check session timeout
+            # Kiểm tra hết hạn phiên đăng nhập
             elapsed = (time.time() - self._login_time) / 60
             if elapsed > SESSION_TIMEOUT_MINUTES:
                 logger.warning("Session timed out")
@@ -85,11 +85,11 @@ class AuthService:
         return self._current_user
 
     def is_authenticated(self):
-        """Check if a user is currently authenticated."""
+        """Kiểm tra xem người dùng đã đăng nhập chưa."""
         return self.get_current_user() is not None
 
     def has_permission(self, permission):
-        """Check if current user has a specific permission."""
+        """Kiểm tra người dùng hiện tại có quyền cụ thể không."""
         user = self.get_current_user()
         if not user:
             return False
@@ -97,7 +97,7 @@ class AuthService:
         return permission in ROLE_PERMISSIONS.get(role, [])
 
     def get_user_permissions(self):
-        """Get all permissions for the current user."""
+        """Lấy tất cả các quyền của người dùng hiện tại."""
         user = self.get_current_user()
         if not user:
             return []
@@ -105,8 +105,8 @@ class AuthService:
 
     def require_permission(self, permission):
         """
-        Check permission and raise error if not authorized.
-        Use as a guard in controllers.
+        Kiểm tra quyền và báo lỗi nếu không được phép.
+        Sử dụng như một bộ lọc bảo vệ trong các controller.
         """
         if not self.has_permission(permission):
             raise PermissionError(

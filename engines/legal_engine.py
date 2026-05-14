@@ -1,6 +1,6 @@
 """
-Legal Knowledge Engine - Retrieves relevant legal articles
-and citations based on fuzzy rule results.
+Động cơ Kiến thức Pháp lý - Truy xuất các điều luật
+và trích dẫn pháp lý dựa trên kết quả của động cơ mờ.
 """
 import logging
 from core.database import DatabaseManager
@@ -10,8 +10,8 @@ logger = logging.getLogger(__name__)
 
 class LegalEngine:
     """
-    Legal knowledge engine for retrieving legal citations.
-    Works with the fuzzy engine results to provide legal context.
+    Động cơ kiến thức pháp lý cho việc truy xuất trích dẫn luật.
+    Làm việc cùng với kết quả của động cơ mờ để cung cấp ngữ cảnh pháp lý.
     """
 
     def __init__(self):
@@ -19,8 +19,8 @@ class LegalEngine:
 
     def find_relevant_articles(self, rule_ids):
         """
-        Find all legal articles linked to the given rule IDs.
-        Returns list of article dicts with document info.
+        Tìm tất cả điều khoản pháp lý liên kết với các ID quy tắc đã cho.
+        Trả về danh sách dict điều khoản kèm thông tin văn bản.
         """
         if not rule_ids:
             return []
@@ -40,8 +40,8 @@ class LegalEngine:
 
     def get_citations(self, article_ids):
         """
-        Get formatted legal citations for display.
-        Returns list of citation dicts.
+        Lấy các trích dẫn pháp lý đã định dạng để hiển thị.
+        Trả về danh sách các dict trích dẫn.
         """
         if not article_ids:
             return []
@@ -76,11 +76,11 @@ class LegalEngine:
 
     def get_articles_for_rules(self, matched_rules_info):
         """
-        Get legal articles for matched rules from fuzzy engine results.
-        Args:
-            matched_rules_info: list of dicts from FuzzyEngine.run()
-        Returns:
-            list of citation dicts
+        Lấy các điều khoản pháp lý cho các quy tắc khớp từ kết quả động cơ mờ.
+        Tham số:
+            matched_rules_info: danh sách dict từ FuzzyEngine.run()
+        Trả về:
+            danh sách các dict trích dẫn
         """
         article_ids = set()
         for rule_info in matched_rules_info:
@@ -93,7 +93,7 @@ class LegalEngine:
         return self.get_citations(list(article_ids))
 
     def search_articles(self, keyword, domain=None):
-        """Search legal articles by keyword."""
+        """Tìm kiếm điều khoản pháp lý theo từ khóa."""
         if domain:
             rows = self.db.fetch_all(
                 """SELECT la.*, ld.title as document_title, ld.code as document_code
@@ -113,7 +113,7 @@ class LegalEngine:
         return [dict(r) for r in rows]
 
     def get_related_articles(self, article_id):
-        """Get articles related to a specific article."""
+        """Lấy các điều khoản liên quan đến một điều khoản cụ thể."""
         rows = self.db.fetch_all(
             """SELECT lr.relation_type, la.*, ld.title as document_title
                FROM legal_relations lr

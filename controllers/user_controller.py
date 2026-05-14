@@ -1,5 +1,5 @@
 """
-User Controller - Manages users and roles.
+Bộ điều khiển Người dùng - Quản lý người dùng và vai trò.
 """
 import logging
 from models.user import User
@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 
 class UserController:
-    """Controller for user management (admin only)."""
+    """Bộ điều khiển cho quản lý người dùng (chỉ admin)."""
 
     def __init__(self):
         self.auth = AuthService()
@@ -32,7 +32,7 @@ class UserController:
 
     def delete_user(self, user_id):
         self.auth.require_permission("manage_users")
-        # Prevent deleting self
+        # Không cho phép xóa chính mình
         current = self.auth.get_current_user()
         if current and current["id"] == user_id:
             raise ValueError("Không thể xóa tài khoản đang đăng nhập")
@@ -43,6 +43,6 @@ class UserController:
         User.change_password(user_id, new_password)
 
     def reset_password(self, user_id, new_password="123456"):
-        """Reset user password to default."""
+        """Đặt lại mật khẩu người dùng về mặc định."""
         self.auth.require_permission("manage_users")
         User.change_password(user_id, new_password)
