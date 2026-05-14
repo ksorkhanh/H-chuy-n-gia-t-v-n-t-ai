@@ -1,5 +1,5 @@
 """
-User Management View - Admin panel for managing users.
+Giao diện Quản lý Người dùng - Bảng điều khiển admin cho quản lý người dùng.
 """
 from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QLabel,
                               QPushButton, QTableWidget, QTableWidgetItem,

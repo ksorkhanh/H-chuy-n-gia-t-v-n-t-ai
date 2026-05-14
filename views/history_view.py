@@ -1,5 +1,5 @@
 """
-History View - Consultation history with search and detail view.
+Giao diện Lịch sử - Lịch sử tư vấn với tìm kiếm và xem chi tiết.
 """
 from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QLabel,
                               QPushButton, QTableWidget, QTableWidgetItem,
@@ -26,7 +26,7 @@ class HistoryView(QWidget):
         title.setObjectName("page_title")
         layout.addWidget(title)
 
-        # Filters
+        # Bộ lọc
         toolbar = QHBoxLayout()
         self.module_filter = QComboBox()
         self.module_filter.setMinimumHeight(38)
@@ -43,7 +43,7 @@ class HistoryView(QWidget):
         toolbar.addWidget(btn_refresh)
         layout.addLayout(toolbar)
 
-        # History table
+        # Bảng lịch sử
         self.table = QTableWidget()
         self.table.setColumnCount(6)
         self.table.setHorizontalHeaderLabels([
@@ -54,7 +54,7 @@ class HistoryView(QWidget):
         self.table.doubleClicked.connect(self._view_detail)
         layout.addWidget(self.table)
 
-        # Actions
+        # Các hành động
         actions = QHBoxLayout()
         btn_view = QPushButton("Xem Chi Tiết")
         btn_view.setProperty("class", "btn_primary")
@@ -125,7 +125,7 @@ class HistoryView(QWidget):
             score_item = QTableWidgetItem(f"{score:.1f}" if score else "—")
             score_item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
             
-            # Apply color based on score
+            # Tô màu dựa trên điểm số
             if score is not None:
                 score_item.setForeground(Qt.GlobalColor.black)
                 if score >= 70:
@@ -168,7 +168,7 @@ class CaseDetailDialog(QDialog):
         content = QWidget()
         content_layout = QVBoxLayout(content)
 
-        # Header
+        # Tiêu đề
         header = QLabel(f"Bản Ghi #{case_data['id']}")
         header.setStyleSheet("font-size: 16pt; font-weight: bold; color: #667eea;")
         content_layout.addWidget(header)
@@ -185,7 +185,7 @@ class CaseDetailDialog(QDialog):
                           "background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 8px;")
         content_layout.addWidget(info)
 
-        # Input data
+        # Dữ liệu đầu vào
         input_data = case_data.get("input_data", {})
         if input_data:
             inp_title = QLabel("📥 Dữ Liệu Đầu Vào")
@@ -196,7 +196,7 @@ class CaseDetailDialog(QDialog):
                 for k, v in input_data.items():
                     content_layout.addWidget(QLabel(f"  • {k}: {v}"))
 
-        # Result data
+        # Dữ liệu kết quả
         result_data = case_data.get("result_data", {})
         if result_data:
             res_title = QLabel("Kết Quả")

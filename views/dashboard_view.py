@@ -1,5 +1,5 @@
 """
-Dashboard View - Statistics overview, quick access, and recent activity.
+Giao diện Tổng quan - Thống kê, truy cập nhanh và hoạt động gần đây.
 """
 from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QLabel,
                               QFrame, QGridLayout, QPushButton, QScrollArea,
@@ -9,7 +9,7 @@ from PyQt6.QtGui import QPainter, QColor, QFont, QPen, QBrush, QLinearGradient
 from datetime import datetime
 
 class BarChart(QWidget):
-    """A beautiful custom bar chart widget."""
+    """Widget biểu đồ cột tùy chỉnh đẹp mắt."""
     def __init__(self, data=None, parent=None):
         super().__init__(parent)
         self.data = data or {} # {"label": value}
@@ -25,7 +25,7 @@ class BarChart(QWidget):
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
         
         width = self.width()
-        height = self.height() - 40 # space for labels
+        height = self.height() - 40 # khoảng trống cho nhãn
         margin = 40
         
         max_val = max(self.data.values()) if self.data.values() else 1
@@ -33,7 +33,7 @@ class BarChart(QWidget):
         
         bar_width = (width - 2 * margin) / len(self.data)
         
-        # Colors
+        # Màu sắc
         text_color = QColor("#a0aec0")
         
         for i, (label, val) in enumerate(self.data.items()):
@@ -41,23 +41,23 @@ class BarChart(QWidget):
             x = margin + i * bar_width + 15
             y = height - bar_height
             
-            # Gradient for bar
+            # Gradient cho cột
             gradient = QLinearGradient(0, y, 0, height)
             gradient.setColorAt(0.0, QColor("#667eea"))
             gradient.setColorAt(1.0, QColor("#764ba2"))
             
             painter.setBrush(QBrush(gradient))
             painter.setPen(Qt.PenStyle.NoPen)
-            # Draw bar with rounded top corners
+            # Vẽ cột với góc trên bo tròn
             painter.drawRoundedRect(int(x), int(y), int(bar_width - 30), int(bar_height), 6, 6)
             
-            # Draw label
+            # Vẽ nhãn
             painter.setPen(text_color)
             painter.setFont(QFont("Segoe UI", 9))
             painter.drawText(QRect(int(x - 15), int(height + 10), int(bar_width), 20), 
                              Qt.AlignmentFlag.AlignCenter, label)
             
-            # Draw value
+            # Vẽ giá trị
             painter.setPen(QColor("#ffffff"))
             painter.setFont(QFont("Segoe UI", 10, QFont.Weight.Bold))
             painter.drawText(QRect(int(x - 15), int(y - 25), int(bar_width), 20), 
@@ -65,7 +65,7 @@ class BarChart(QWidget):
 
 
 class DashboardView(QWidget):
-    """Dashboard with statistics, quick access, and recent activity."""
+    """Tổng quan với thống kê, truy cập nhanh và hoạt động gần đây."""
 
     module_selected = pyqtSignal(str)
     action_requested = pyqtSignal(str)  # users, rules, history
@@ -76,17 +76,17 @@ class DashboardView(QWidget):
         self.history_ctrl = history_controller
         self.user = self.history_ctrl.auth.get_current_user()
         self._setup_ui()
-        # Auto-refresh timer
+        # Bộ hẹn giờ tự động làm mới
         self.refresh_timer = QTimer(self)
         self.refresh_timer.timeout.connect(self.refresh_data)
-        self.refresh_timer.start(30000) # Refresh every 30s
+        self.refresh_timer.start(30000) # Làm mới mỗi 30 giây
 
     def _setup_ui(self):
         layout = QVBoxLayout(self)
         layout.setSpacing(20)
         layout.setContentsMargins(30, 20, 30, 20)
 
-        # Header
+        # Tiêu đề
         header_layout = QVBoxLayout()
         header_layout.setSpacing(5)
         
@@ -103,7 +103,7 @@ class DashboardView(QWidget):
         
         layout.addLayout(header_layout)
 
-        # Statistics cards (Top Row)
+        # Thẻ thống kê (Hàng trên)
         stats_layout = QHBoxLayout()
         stats_layout.setSpacing(15)
 
@@ -120,11 +120,11 @@ class DashboardView(QWidget):
         stats_layout.addWidget(self.stat_tax)
         layout.addLayout(stats_layout)
 
-        # Middle Row: Modules & Quick Actions
+        # Hàng giữa: Module & Thao tác nhanh
         mid_layout = QHBoxLayout()
         mid_layout.setSpacing(20)
 
-        # Left: Modules
+        # Trái: Các Module
         modules_frame = QFrame()
         modules_layout = QVBoxLayout(modules_frame)
         modules_layout.setContentsMargins(0, 0, 0, 0)
@@ -144,7 +144,7 @@ class DashboardView(QWidget):
         modules_layout.addStretch()
         mid_layout.addWidget(modules_frame, stretch=2)
 
-        # Right: Quick Actions (Only for admin or those with permissions)
+        # Phải: Thao tác nhanh (Chỉ admin hoặc có quyền)
         if self.user and self.user.get('role') == 'admin':
             actions_frame = QFrame()
             actions_layout = QVBoxLayout(actions_frame)
@@ -172,18 +172,18 @@ class DashboardView(QWidget):
             
         layout.addLayout(mid_layout)
 
-        # Bottom Row: Chart & Recent Activity
+        # Hàng dưới: Biểu đồ & Hoạt động gần đây
         bottom_layout = QHBoxLayout()
         bottom_layout.setSpacing(20)
 
-        # Left: Chart
+        # Trái: Biểu đồ
         chart_card = self._create_panel("Thống kê theo nghiệp vụ")
         chart_layout = QVBoxLayout(chart_card)
         self.bar_chart = BarChart()
         chart_layout.addWidget(self.bar_chart)
         bottom_layout.addWidget(chart_card, stretch=1)
         
-        # Right: Recent Activity
+        # Phải: Hoạt động gần đây
         recent_card = self._create_panel("🕒 Hoạt động gần đây")
         recent_layout = QVBoxLayout(recent_card)
         
@@ -257,7 +257,7 @@ class DashboardView(QWidget):
         return btn
 
     def _create_stat_card(self, value, label, icon, highlight_color):
-        """Create a highly aesthetic statistics card."""
+        """Tạo thẻ thống kê với giao diện đẹp."""
         card = QFrame()
         card.setStyleSheet(f"""
             QFrame {{
@@ -273,11 +273,11 @@ class DashboardView(QWidget):
         layout = QHBoxLayout(card)
         layout.setContentsMargins(20, 20, 20, 20)
         
-        # Left side: Text
+        # Bên trái: Văn bản
         text_layout = QVBoxLayout()
         val_label = QLabel(value)
         val_label.setStyleSheet(f"font-size: 24pt; font-weight: bold; color: {highlight_color}; border: none;")
-        card.value_label = val_label # Store reference
+        card.value_label = val_label # Lưu tham chiếu
         
         name_label = QLabel(label)
         name_label.setStyleSheet("font-size: 10pt; color: #94a3b8; border: none;")
@@ -285,7 +285,7 @@ class DashboardView(QWidget):
         text_layout.addWidget(val_label)
         text_layout.addWidget(name_label)
         
-        # Right side: Icon
+        # Bên phải: Biểu tượng
         icon_label = QLabel(icon)
         icon_label.setStyleSheet("font-size: 28pt; border: none; background: transparent;")
         
@@ -296,7 +296,7 @@ class DashboardView(QWidget):
         return card
 
     def _create_module_card(self, icon, title, description, module_name):
-        """Create a beautiful clickable module card."""
+        """Tạo thẻ module có thể nhấp được."""
         card = QPushButton()
         card.setCursor(Qt.CursorShape.PointingHandCursor)
         card.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
@@ -338,12 +338,12 @@ class DashboardView(QWidget):
         return card
 
     def refresh_data(self):
-        """Refresh dashboard statistics and recent history."""
+        """Làm mới thống kê và lịch sử gần đây trên tổng quan."""
         self.refresh_stats()
         self.refresh_recent_activity()
 
     def refresh_stats(self):
-        """Refresh dashboard statistics."""
+        """Làm mới thống kê tổng quan."""
         try:
             stats = self.history_ctrl.get_statistics()
             self.stat_total.value_label.setText(str(stats.get("total", 0)))
@@ -353,7 +353,7 @@ class DashboardView(QWidget):
             self.stat_violation.value_label.setText(str(by_module.get("violation", 0)))
             self.stat_tax.value_label.setText(str(by_module.get("tax", 0)))
             
-            # Update chart
+            # Cập nhật biểu đồ
             chart_data = {
                 "Chuyển nhượng": by_module.get("transfer", 0),
                 "Bồi thường": by_module.get("compensation", 0),
@@ -365,16 +365,16 @@ class DashboardView(QWidget):
             print(f"Error refreshing stats: {e}")
 
     def refresh_recent_activity(self):
-        """Fetch and display recent cases."""
+        """Lấy và hiển thị các bản ghi gần đây."""
         try:
-            # Always get recent cases globally for admin, or personal for user
+            # Lấy các bản ghi toàn cục cho admin, hoặc cá nhân cho người dùng
             recent_cases = self.history_ctrl.get_history(limit=5)
             self.recent_table.setRowCount(0)
             
             for row_idx, case in enumerate(recent_cases):
                 self.recent_table.insertRow(row_idx)
                 
-                # Format time
+                # Định dạng thời gian
                 created_at = case.get("created_at", "")
                 if created_at:
                     try:
@@ -388,7 +388,7 @@ class DashboardView(QWidget):
                 user_name = case.get("user_name", "Ẩn danh")
                 module = case.get("module", "")
                 
-                # Format conclusion
+                # Định dạng kết luận
                 score = case.get("score", 0)
                 conclusion = case.get("conclusion", "")
                 result_str = f"{score:.1f} - {conclusion}"
@@ -407,6 +407,6 @@ class DashboardView(QWidget):
             print(f"Error refreshing recent activity: {e}")
 
     def showEvent(self, event):
-        """Called when view becomes visible."""
+        """Được gọi khi giao diện trở nên hiển thị."""
         super().showEvent(event)
         self.refresh_data()

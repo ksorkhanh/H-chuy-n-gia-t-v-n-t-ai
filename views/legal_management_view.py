@@ -1,5 +1,5 @@
 """
-Legal Management View - CRUD for legal documents and articles.
+Giao diện Quản lý Pháp lý - CRUD cho văn bản và điều khoản pháp lý.
 """
 from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QLabel,
                               QPushButton, QTableWidget, QTableWidgetItem,
@@ -10,7 +10,7 @@ from PyQt6.QtCore import Qt
 
 
 class LegalManagementView(QWidget):
-    """View for managing legal documents and articles."""
+    """Giao diện quản lý văn bản và điều khoản pháp lý."""
 
     def __init__(self, legal_controller):
         super().__init__()

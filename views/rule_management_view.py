@@ -1,5 +1,5 @@
 """
-Rule Management View - CRUD for fuzzy inference rules with import/export.
+Giao diện Quản lý Quy tắc - CRUD cho các quy tắc suy diễn mờ với nhập/xuất.
 """
 from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QLabel,
                               QPushButton, QTableWidget, QTableWidgetItem,
@@ -12,7 +12,7 @@ import os
 
 
 class RuleManagementView(QWidget):
-    """View for managing fuzzy inference rules."""
+    """Giao diện quản lý các quy tắc suy diễn mờ."""
 
     def __init__(self, rule_controller, legal_controller):
         super().__init__()

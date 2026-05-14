@@ -1,17 +1,17 @@
 """
-QSS Stylesheet - Enterprise Flat Theme.
-Loads colors and fonts from config/theme.json dynamically.
+QSS Stylesheet - Giao diện phẳng doanh nghiệp.
+Nạp màu sắc và font từ config/theme.json động.
 """
 import json
 import os
 
-# Load theme variables
+# Nạp biến giao diện
 THEME_FILE = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config', 'theme.json')
 try:
     with open(THEME_FILE, 'r', encoding='utf-8') as f:
         THEME = json.load(f)
 except Exception:
-    # Fallback to Enterprise Dark Theme
+    # Dự phòng: Giao diện tối doanh nghiệp
     THEME = {
         "font_family": "'Segoe UI', 'Inter', 'Roboto', 'Arial', sans-serif",
         "font_size": "10pt",
