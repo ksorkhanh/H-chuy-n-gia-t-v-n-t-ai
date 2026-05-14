@@ -47,31 +47,34 @@ Khi người dùng nhấn nút "Chạy tư vấn", luồng xử lý sẽ đi qua
 ### Lớp 3: Động cơ cốt lõi (Engines)
 Đây là nơi thực hiện tính toán tại `engines/fuzzy_engine.py`. Quy trình đi qua 4 bước toán học:
 
-#### Bước 1: Mờ hóa (Fuzzification) - Tính độ liên thuộc $\mu$
-Hệ thống sử dụng hàm `MembershipFunction.evaluate(x)` để tính độ khớp của giá trị thực `x` vào một tập mờ.
+#### Bước 1: Mờ hóa (Fuzzification) - Tính độ liên thuộc (mu)
+Hệ thống sử dụng hàm `MembershipFunction.evaluate(x)` để tính xem giá trị thực `x` thuộc về một tập mờ bao nhiêu phần trăm (từ 0 đến 1).
 
 *   **Hàm Tam giác (Triangular) [a, b, c]:**
-    $$ \mu(x) = \begin{cases} 0 & x \le a \text{ hoặc } x \ge c \\ \frac{x-a}{b-a} & a < x < b \\ 1 & x = b \\ \frac{c-x}{c-b} & b < x < c \end{cases} $$
-    *(Trong code: dòng 36-44 file `fuzzy_engine.py`)*
+    - Nếu **x <= a** hoặc **x >= c**: mu = 0 (Không thuộc)
+    - Nếu **x = b**: mu = 1 (Thuộc hoàn toàn)
+    - Nếu **a < x < b**: mu = (x - a) / (b - a) (Đang tăng dần)
+    - Nếu **b < x < c**: mu = (c - x) / (c - b) (Đang giảm dần)
 
 *   **Hàm Hình thang (Trapezoidal) [a, b, c, d]:**
-    $$ \mu(x) = \begin{cases} 0 & x \le a \text{ hoặc } x \ge d \\ \frac{x-a}{b-a} & a < x < b \\ 1 & b \le x \le c \\ \frac{d-x}{d-c} & c < x < d \end{cases} $$
-    *(Trong code: dòng 46-55 file `fuzzy_engine.py`)*
+    - Nếu **x <= a** hoặc **x >= d**: mu = 0
+    - Nếu **b <= x <= c**: mu = 1 (Thuộc hoàn toàn ở đoạn giữa)
+    - Nếu **a < x < b**: mu = (x - a) / (b - a) (Đang tăng)
+    - Nếu **c < x < d**: mu = (d - x) / (d - c) (Đang giảm)
 
-#### Bước 2: Đánh giá luật (Rule Evaluation) - Tìm độ kích hoạt $\alpha$
-Với mỗi luật, hệ thống lấy giá trị $\mu$ nhỏ nhất của các điều kiện đầu vào (Toán tử AND/MIN).
-Ví dụ: Nếu `Diện tích là Lớn (0.8)` AND `Vị trí là Đẹp (0.5)` $\Rightarrow$ Độ kích hoạt luật $\alpha = 0.5$.
+#### Bước 2: Đánh giá luật (Rule Evaluation) - Tìm độ kích hoạt (alpha)
+Với mỗi luật, hệ thống lấy giá trị mu **nhỏ nhất** (MIN) của các điều kiện.
+- Ví dụ luật: NẾU (Diện tích là Lớn: 0.8) VÀ (Vị trí là Đẹp: 0.5)
+- => Độ kích hoạt luật **alpha = 0.5** (Lấy con số nhỏ nhất).
 
-#### Bước 3: Tổng hợp (Aggregation) - Hợp nhất các hình học
-Hệ thống sử dụng phương pháp **Mamdani**:
-1.  **Cắt ngọn (Clipping):** Hàm liên thuộc của kết quả (ví dụ: tập "Cao") sẽ bị cắt ngang tại độ cao $\alpha$.
-2.  **Hợp nhất (MAX):** Lấy giá trị lớn nhất của tất cả các hàm đã bị cắt ngọn để tạo ra một hình học tổng hợp duy nhất đại diện cho tất cả các luật đã kích hoạt.
+#### Bước 3: Tổng hợp (Aggregation)
+1.  **Cắt ngọn:** Tập kết quả (ví dụ: "Bồi thường Cao") sẽ bị giới hạn độ cao tối đa là 0.5 (alpha).
+2.  **Hợp nhất:** Hệ thống chồng tất cả các hình học của các luật lên nhau và lấy phần bao bên ngoài (giá trị lớn nhất - MAX).
 
-#### Bước 4: Giải mờ (Defuzzification) - Trọng tâm (Centroid)
-Đây là bước quan trọng nhất để ra số điểm cuối cùng. Hàm `defuzzify(x, aggregated)` thực hiện tính toán:
-$$ \text{Điểm cuối cùng} = \frac{\sum (x_i \cdot \text{aggregated}_i)}{\sum \text{aggregated}_i} $$
-*   **Ý nghĩa:** Tìm "trọng tâm" của hình học tổng hợp. Điểm này đại diện cho sự cân bằng của tất cả các ý kiến từ tập luật.
-*   **Ví dụ:** Nếu các luật nghiêng về phía "Vi phạm nặng" (điểm cao), hình học sẽ lệch về bên phải, kéo trọng tâm lên mức 80-90 điểm.
+#### Bước 4: Giải mờ (Defuzzification) - Tính điểm cuối cùng
+Hệ thống tính **Trọng tâm** của hình học tổng hợp ở Bước 3.
+- **Công thức đơn giản:** Điểm = (Tổng của [Giá trị x * Độ cao tại x]) / (Tổng các độ cao)
+- **Ý nghĩa:** Kết quả là "điểm cân bằng" của toàn bộ các luật. Nếu các luật "nặng" chiếm ưu thế, trọng tâm sẽ lệch về phía điểm cao (80-100), nếu các luật "nhẹ" chiếm ưu thế, trọng tâm sẽ lệch về phía điểm thấp (0-20).
 
 ---
 
