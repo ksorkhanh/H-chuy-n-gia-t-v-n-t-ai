@@ -45,14 +45,33 @@ Khi người dùng nhấn nút "Chạy tư vấn", luồng xử lý sẽ đi qua
     4. Gọi `LegalEngine.get_articles_for_rules()` để lấy trích dẫn luật dựa trên các luật đã khớp.
 
 ### Lớp 3: Động cơ cốt lõi (Engines)
-Đây là nơi thực hiện tính toán toán học tại `engines/fuzzy_engine.py`:
+Đây là nơi thực hiện tính toán tại `engines/fuzzy_engine.py`. Quy trình đi qua 4 bước toán học:
 
-| Giai đoạn | Hàm trong `fuzzy_engine.py` | Mô tả toán học |
-|:---|:---|:---|
-| **1. Mờ hóa** | `fuzzify(inputs)` | Chuyển giá trị thực (ví dụ: 50m2) thành độ liên thuộc [0, 1] cho các tập mờ (ví dụ: Rộng: 0.8, Vừa: 0.2). |
-| **2. Đánh giá luật** | `evaluate_rules()` | Sử dụng toán tử **MIN** (And) để tính độ kích hoạt (Firing Strength) của từng luật. |
-| **3. Tổng hợp** | `aggregate()` | Sử dụng toán tử **MAX** (Or) để kết hợp các kết quả của tất cả luật đã kích hoạt thành một hình học mờ duy nhất. |
-| **4. Giải mờ** | `defuzzify()` | Sử dụng phương pháp **Trọng tâm (Centroid)**: Tính toán điểm cân bằng của hình học tổng hợp để đưa ra điểm số cuối cùng (0-100). |
+#### Bước 1: Mờ hóa (Fuzzification) - Tính độ liên thuộc $\mu$
+Hệ thống sử dụng hàm `MembershipFunction.evaluate(x)` để tính độ khớp của giá trị thực `x` vào một tập mờ.
+
+*   **Hàm Tam giác (Triangular) [a, b, c]:**
+    $$ \mu(x) = \begin{cases} 0 & x \le a \text{ hoặc } x \ge c \\ \frac{x-a}{b-a} & a < x < b \\ 1 & x = b \\ \frac{c-x}{c-b} & b < x < c \end{cases} $$
+    *(Trong code: dòng 36-44 file `fuzzy_engine.py`)*
+
+*   **Hàm Hình thang (Trapezoidal) [a, b, c, d]:**
+    $$ \mu(x) = \begin{cases} 0 & x \le a \text{ hoặc } x \ge d \\ \frac{x-a}{b-a} & a < x < b \\ 1 & b \le x \le c \\ \frac{d-x}{d-c} & c < x < d \end{cases} $$
+    *(Trong code: dòng 46-55 file `fuzzy_engine.py`)*
+
+#### Bước 2: Đánh giá luật (Rule Evaluation) - Tìm độ kích hoạt $\alpha$
+Với mỗi luật, hệ thống lấy giá trị $\mu$ nhỏ nhất của các điều kiện đầu vào (Toán tử AND/MIN).
+Ví dụ: Nếu `Diện tích là Lớn (0.8)` AND `Vị trí là Đẹp (0.5)` $\Rightarrow$ Độ kích hoạt luật $\alpha = 0.5$.
+
+#### Bước 3: Tổng hợp (Aggregation) - Hợp nhất các hình học
+Hệ thống sử dụng phương pháp **Mamdani**:
+1.  **Cắt ngọn (Clipping):** Hàm liên thuộc của kết quả (ví dụ: tập "Cao") sẽ bị cắt ngang tại độ cao $\alpha$.
+2.  **Hợp nhất (MAX):** Lấy giá trị lớn nhất của tất cả các hàm đã bị cắt ngọn để tạo ra một hình học tổng hợp duy nhất đại diện cho tất cả các luật đã kích hoạt.
+
+#### Bước 4: Giải mờ (Defuzzification) - Trọng tâm (Centroid)
+Đây là bước quan trọng nhất để ra số điểm cuối cùng. Hàm `defuzzify(x, aggregated)` thực hiện tính toán:
+$$ \text{Điểm cuối cùng} = \frac{\sum (x_i \cdot \text{aggregated}_i)}{\sum \text{aggregated}_i} $$
+*   **Ý nghĩa:** Tìm "trọng tâm" của hình học tổng hợp. Điểm này đại diện cho sự cân bằng của tất cả các ý kiến từ tập luật.
+*   **Ví dụ:** Nếu các luật nghiêng về phía "Vi phạm nặng" (điểm cao), hình học sẽ lệch về bên phải, kéo trọng tâm lên mức 80-90 điểm.
 
 ---
 
