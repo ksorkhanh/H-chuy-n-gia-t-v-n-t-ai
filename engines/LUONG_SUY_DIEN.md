@@ -2,6 +2,107 @@
 
 ---
 
+## PHẦN I: LÝ THUYẾT LOGIC MỜ (Fuzzy Logic)
+
+### 1. Logic Mờ là gì?
+
+Logic Mờ (Fuzzy Logic) là một dạng logic toán học cho phép một phần tử **vừa thuộc vừa không thuộc** một tập hợp ở các mức độ khác nhau, thay vì chỉ có hai trạng thái cứng nhắc là "hoàn toàn thuộc" (1) hoặc "hoàn toàn không thuộc" (0) như logic cổ điển.
+
+**Ví dụ trực quan:**
+- Logic cổ điển: Một mảnh đất hoặc là "đắt" HOẶC là "rẻ" (không có vùng xám).
+- Logic Mờ: Một mảnh đất có thể vừa "hơi đắt" (0.6) vừa "hơi trung bình" (0.4) cùng một lúc.
+
+---
+
+### 2. Các Định Nghĩa Cốt Lõi
+
+#### 2.1. Tập Mờ (Fuzzy Set)
+Là một tập hợp trong đó mỗi phần tử có một **độ liên thuộc (membership degree)** nằm trong khoảng [0, 1].
+- **0**: Hoàn toàn không thuộc tập.
+- **1**: Thuộc hoàn toàn vào tập.
+- **0 < mu < 1**: Thuộc một phần (mức độ mờ).
+
+Trong hệ thống, các tập mờ được định nghĩa trong file `config.json` của từng module, ví dụ: tập "Cao", tập "Trung bình", tập "Thấp".
+
+#### 2.2. Hàm Liên Thuộc (Membership Function - MF)
+Là hàm toán học xác định độ liên thuộc `mu(x)` của một giá trị thực `x` vào một tập mờ. Hệ thống hỗ trợ 2 dạng hàm:
+
+**a) Hàm Tam giác (Triangular) - params: [a, b, c]**
+```
+Hình dạng:      /\
+               /  \
+              /    \
+_____________/      \____________
+             a   b   c
+```
+- `a`: Điểm bắt đầu tăng (mu=0)
+- `b`: Đỉnh tam giác (mu=1)
+- `c`: Điểm kết thúc giảm (mu=0)
+- Công thức:
+  - x <= a hoặc x >= c  =>  mu = 0
+  - a < x < b           =>  mu = (x - a) / (b - a)   [tăng tuyến tính]
+  - x = b               =>  mu = 1
+  - b < x < c           =>  mu = (c - x) / (c - b)   [giảm tuyến tính]
+
+**b) Hàm Hình thang (Trapezoidal) - params: [a, b, c, d]**
+```
+Hình dạng:     ________
+              /        \
+             /          \
+____________/            \________
+            a   b    c   d
+```
+- `a`: Điểm bắt đầu tăng (mu=0)
+- `b`: Bắt đầu vùng đỉnh (mu=1)
+- `c`: Kết thúc vùng đỉnh (mu=1)
+- `d`: Điểm kết thúc giảm (mu=0)
+- Công thức:
+  - x <= a hoặc x >= d  =>  mu = 0
+  - a < x < b           =>  mu = (x - a) / (b - a)   [tăng]
+  - b <= x <= c         =>  mu = 1                    [vùng đỉnh phẳng]
+  - c < x < d           =>  mu = (d - x) / (d - c)   [giảm]
+
+> Hình thang được dùng khi một tập mờ có một "vùng chắc chắn" rộng, không chỉ là một điểm đỉnh. Ví dụ: "Trung bình" có thể là [20, 40, 60, 80] nghĩa là từ 40 đến 60 đều là "Trung bình hoàn toàn".
+
+#### 2.3. Biến Ngôn Ngữ (Linguistic Variable)
+Là biến có các giá trị được biểu diễn bằng ngôn ngữ tự nhiên thay vì con số. Mỗi giá trị ngôn ngữ tương ứng với một tập mờ.
+
+Ví dụ: Biến "Giá trị đất" có các giá trị ngôn ngữ: **"Thấp"**, **"Trung bình"**, **"Cao"** — mỗi cái là một tập mờ riêng.
+
+#### 2.4. Quy Tắc Mờ (Fuzzy Rule)
+Là luật IF-THEN kết nối các biến đầu vào với đầu ra:
+```
+IF (land_value là "Cao") AND (location_type là "Đô thị")
+THEN (tax_rate là "Thuế cao")
+```
+Trong hệ thống, các quy tắc này được lưu trong Cơ sở dữ liệu SQLite và nạp động qua `Rule.get_by_module()`.
+
+#### 2.5. Mờ hóa (Fuzzification)
+Quá trình chuyển đổi giá trị thực (crisp input) đầu vào thành các độ liên thuộc mờ bằng cách áp dụng hàm liên thuộc.
+- **Đầu vào:** Giá trị số (ví dụ: x = 9)
+- **Đầu ra:** Tập các cặp (tập mờ, độ liên thuộc) (ví dụ: {Thấp: 0.0, Trung bình: 0.0, Cao: 0.8})
+
+#### 2.6. Suy Diễn Mờ Mamdani
+Phương pháp suy diễn được hệ thống sử dụng, gồm 2 phần:
+- **Toán tử AND (MIN):** Độ kích hoạt của một luật = giá trị nhỏ nhất trong các độ liên thuộc của các điều kiện đầu vào.
+- **Cắt ngọn (Clipping):** Hàm liên thuộc đầu ra bị cắt ngang tại mức độ kích hoạt của luật đó.
+
+#### 2.7. Tổng Hợp (Aggregation)
+Gộp kết quả của nhiều luật đã kích hoạt thành một hình học mờ tổng hợp duy nhất bằng toán tử MAX (lấy giá trị lớn nhất tại mỗi điểm).
+
+#### 2.8. Giải Mờ (Defuzzification)
+Quá trình chuyển đổi hình học mờ tổng hợp thành một con số thực (điểm số cuối cùng). Phương pháp Trọng tâm (Centroid):
+```
+Diem = Sum(x_i * mu_i) / Sum(mu_i)
+```
+Tìm "điểm cân bằng" của hình học, tương tự như tính trọng tâm vật lý của một vật thể.
+
+---
+
+## PHẦN II: ÁP DỤNG VÀO HỆ THỐNG
+
+---
+
 ## VÍ DỤ TÍNH TOÁN THỰC TẾ - MODULE THUẾ ĐẤT ĐAI
 
 ### TÌNH HUỐNG GIẢ ĐỊNH
